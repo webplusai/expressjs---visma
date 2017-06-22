@@ -29,14 +29,14 @@ function initializeCropperDropzone( selector ) {
         }
     }
 
-    var myDropzone = new Dropzone("#upload-icon", options);
+    var myDropzone = new Dropzone(selector, options);
 
     $(selector + ' .dz-default').prepend("<input type='button' class='btn btn-default upload-btn' value='Select an Image'>");
     myDropzone.destroy();
     options.clickable = selector + ' .upload-btn';
-    myDropzone = new Dropzone("#upload-icon", options);
+    myDropzone = new Dropzone(selector, options);
 
-    $('#upload-icon').on('click', '.js-open-cropper-modal', function (e) {
+    $(selector).on('click', '.js-open-cropper-modal', function (e) {
         e.preventDefault();
         var fileName = $(this).data('file-name');
 

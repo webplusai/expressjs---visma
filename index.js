@@ -7,7 +7,7 @@ var app = express();
 
 app.use(busboy());
 app.get('/', function(req, res) {
-	res.redirect('/my-apps');
+	res.redirect('/app');
 });
 
 app.post('/upload', function(req, res) {
@@ -23,12 +23,16 @@ app.post('/upload', function(req, res) {
     });
 });
 
-app.get('/my-apps', function(req, res) {
-	res.render('my-apps');
+app.get('/app', function(req, res) {
+    res.render('app/app-show');
 });
 
-app.get('/add-app', function(req, res) {
-	res.render('add-app');
+app.get('/app/create', function(req, res) {
+    res.render('app/app-create');
+});
+
+app.get('/app/edit/:id', function(req, res) {
+    res.render('app/app-edit');
 });
 
 app.set('view engine', 'pug');

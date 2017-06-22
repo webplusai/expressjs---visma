@@ -1,0 +1,92 @@
+include ./../header.pug
+
+section.breadcrumb
+	div.container
+		h1.
+			Add App
+		span.
+			 Home
+		span.
+			 /
+		span.
+			 My Apps
+		span.
+			 /
+		span.
+			 Add App
+
+section.form
+	div.container
+		form(method="post")
+			div.form-group.row
+				div.col-md-3.item.
+					Application Name
+					#[span.text-danger *]
+				div.col-md-6
+					input.form-control
+			div.form-group.row
+				div.col-md-3.item.
+					Summary
+					#[span.text-danger *]
+				div.col-md-6
+					textarea.form-control
+			div.from-group.row
+				div.col-md-3.item.
+					Description
+					#[span.text-danger *]
+				div.col-md-6
+					textarea.form-control#description
+			div.form-group.row
+				div.col-md-3.item.
+					Icon
+					#[span.text-danger *]
+				div.col-md-6
+					div#upload-icon.dropzone
+			div.form-group.row
+				div.col-md-3.item.
+					Images
+				div.col-md-6
+					div#upload-images.dropzone
+			div.form-group.row
+				div.col-md-3.item.
+					Categorizer
+					#[span.text-danger *]
+				div.col-md-6
+					input.form-control
+			div.form-group.row
+				div.col-md-3.item.
+					Website URL
+				div.col-md-6
+					input.form-control
+			div.form-group.row
+				div.col-md-3.item.
+					Video URL
+				div.col-md-6
+					input.form-control.video-url
+					div.video-preview
+			div.form-group.row
+				div.col-md-6.col-md-offset-3
+					input(type="checkbox")
+					label. 
+						 I agree to the terms and conditions.
+						#[span.text-danger *]
+			div.form-group.row
+				div.col-md-6.col-md-offset-3
+					button.btn.btn-primary.pull-right.
+						Save Draft
+
+script(src="/public/js/cropper-dropzone.js")
+script.
+	Dropzone.autoDiscover = false;
+	tinymce.init({ selector:'#description' });
+	$(document).ready(function() {
+		initializeCropperDropzone("#upload-icon");
+		initializeCropperDropzone("#upload-images");
+
+		$(".video-url").change(function() {
+			$(".video-preview iframe").remove();
+			$(".video-preview").append(getEmbedVideoCode( $(".video-url").val(), 390, 220 ));
+		});
+	});
+
+include ./../footer.pug
