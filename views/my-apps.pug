@@ -1,0 +1,75 @@
+include ./header.pug
+
+section.statistics
+	div.container.section-container
+		div.error-panel
+			i.fa.fa-exclamation-circle
+			span.
+				 Drafts must be published before they can be listed on the marketplace.
+		h1
+			i.fa.fa-search
+			span.
+				 0 Views
+		div#plot
+
+section.add-app
+	div.section-container.action-container.text-center
+		div.container
+			h1.
+				Add your app
+			button.btn-white.btn-see-through.btn-lg.
+				Add App
+
+section.apps
+	div.section-container
+		h1.text-center.
+			My Apps
+		div.container
+			div.card-group
+				div.row
+					div.col-md-6
+						div.card
+							div.card-overlay.text-center
+								btn.btn.btn-see-through
+									i.fa.fa-pencil
+								btn.btn.btn-see-through
+									i.fa.fa-rocket
+								btn.btn.btn-see-through
+									i.fa.fa-search
+								btn.btn.btn-see-through
+									i.fa.fa-trash
+							div.card-status.text-center.
+								Draft
+							div.card-content
+								div.row
+									div.col-md-4
+										div.card-image
+											img(src="//s3.amazonaws.com/cloudexchange-uat/594867851707a57fed6fd4b9.png")
+									div.col-md-8
+										div.card-title.
+											This is a test app
+										div.card-summary.
+											Test summary
+
+script(src="/public/js/jquery.flot.min.js")
+script.
+	$("#plot").plot(
+		[
+			{ 
+				label: "Foo",
+				data: [ [10, 1], [17, -14], [30, 5] ]
+			},
+			{ 
+				label: "Bar",
+				data: [ [11, 13], [19, 11], [30, -7] ] 
+			}
+		],
+		{
+			series: {
+				lines: { show: true },
+				points: { show: true }
+			}
+		}
+	).data("plot");
+
+include ./footer.pug

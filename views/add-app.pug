@@ -1,0 +1,54 @@
+include ./header.pug
+
+section.breadcrumb
+	div.container
+		h1.
+			Add App
+		span.
+			 Home
+		span.
+			 /
+		span.
+			 My Apps
+		span.
+			 /
+		span.
+			 Add App
+
+section.form
+	div.container
+		form
+			div.form-group.row
+				div.col-md-3.item.
+					Application Name
+					#[span.text-danger *]
+				div.col-md-6
+					input.form-control
+			div.form-group.row
+				div.col-md-3.item.
+					Summary
+					#[span.text-danger *]
+				div.col-md-6
+					textarea.form-control
+			div.from-group.row
+				div.col-md-3.item.
+					Description
+					#[span.text-danger *]
+				div.col-md-6
+					textarea.form-control#description
+			div.form-group.row
+				div.col-md-3.item.
+					Icon
+					#[span.text-danger *]
+				div.col-md-6
+					div#upload-icon.dropzone
+
+script(src="/public/js/cropper-dropzone.js")
+script.
+	Dropzone.autoDiscover = false;
+	tinymce.init({ selector:'#description' });
+	$(document).ready(function() {
+		initializeCropperDropzone("#upload-icon");
+	});
+
+include ./footer.pug
