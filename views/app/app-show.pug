@@ -17,7 +17,7 @@ section.add-app
 		div.container
 			h1.
 				Add your app
-			button.btn-white.btn-see-through.btn-lg.
+			a.btn.btn-white.btn-see-through.btn-lg(href="/app/create").
 				Add App
 
 section.apps
@@ -30,13 +30,13 @@ section.apps
 					div.col-md-6
 						div.card
 							div.card-overlay.text-center
-								btn.btn.btn-see-through
+								btn.btn.btn-see-through(data-toggle="tooltip", title="Edit")
 									i.fa.fa-pencil
-								btn.btn.btn-see-through
+								btn.btn.btn-see-through(data-toggle="tooltip", title="Publish")
 									i.fa.fa-rocket
-								btn.btn.btn-see-through
+								btn.btn.btn-see-through(data-toggle="tooltip", title="Preview")
 									i.fa.fa-search
-								btn.btn.btn-see-through
+								btn.btn.btn-see-through(data-toggle="tooltip", title="Delete")
 									i.fa.fa-trash
 							div.card-status.text-center.
 								Draft
@@ -53,23 +53,26 @@ section.apps
 
 script(src="/public/js/jquery.flot.min.js")
 script.
-	$("#plot").plot(
-		[
-			{ 
-				label: "Foo",
-				data: [ [10, 1], [17, -14], [30, 5] ]
-			},
-			{ 
-				label: "Bar",
-				data: [ [11, 13], [19, 11], [30, -7] ] 
+	$(document).ready(function() {
+		$("#plot").plot(
+			[
+				{ 
+					label: "Foo",
+					data: [ [10, 1], [17, -14], [30, 5] ]
+				},
+				{ 
+					label: "Bar",
+					data: [ [11, 13], [19, 11], [30, -7] ] 
+				}
+			],
+			{
+				series: {
+					lines: { show: true },
+					points: { show: true }
+				}
 			}
-		],
-		{
-			series: {
-				lines: { show: true },
-				points: { show: true }
-			}
-		}
-	).data("plot");
+		).data("plot");
+		$("[data-toggle='tooltip']").tooltip();
+	});
 
 include ./../footer.pug

@@ -9,8 +9,8 @@ var dataURItoBlob = function (dataURI) {
     return new Blob([ab], {type: 'image/jpeg'});
 };
 
-function initializeCropperDropzone( selector ) {
-    var c = 0;
+function initializeCropperDropzone( selector, imgId ) {
+    var showCropper = true;
 
     var options = {
         url: "/upload",
@@ -21,10 +21,24 @@ function initializeCropperDropzone( selector ) {
         uploadMultiple: false,
         maxFiles: 10,
         init: function () {
-            this.on('success', function (file) {
-                var $button = $('<a href="#" class="js-open-cropper-modal hidden" data-file-name="' + file.name + '">Crop & Upload</a>');
+            this.on('success', function (file,response) {
+                var $button = $('<a href="#" class="js-open-cropper-modal hidden" data-file-name="' + response + '">Crop & Upload</a>');
+                setTimeout(function() {
+                    $('.dz-remove').text('');
+                    $('.dz-remove').append('<i class="fa fa-trash"> </i>');
+                }, 0);
+                
                 $(file.previewElement).append($button);
-                $button.trigger('click');
+                if (showCropper == true) {
+                    $button.trigger('click');
+                    myDropzone.removeFile(file);
+                    $(".modal.fade").remove();
+                    showCropper = false;
+                } else {
+                    setTimeout(function() {
+                        $('.dz-preview:last-child .dz-filename span').text(file.name.substring(14));
+                    });
+                }
             });
         }
     }
@@ -35,6 +49,9 @@ function initializeCropperDropzone( selector ) {
     myDropzone.destroy();
     options.clickable = selector + ' .upload-btn';
     myDropzone = new Dropzone(selector, options);
+    $(selector + ' .dz-default .upload-btn').click(function() {
+        showCropper = true;
+    });
 
     $(selector).on('click', '.js-open-cropper-modal', function (e) {
         e.preventDefault();
@@ -50,7 +67,7 @@ function initializeCropperDropzone( selector ) {
             '           </div>' +
             '           <div class="modal-body">' +
             '               <div class="image-container">' +
-            '                   <img id="img-' + ++c + '" src="/uploads/' + fileName + '">' +
+            '                   <img id="img-' + imgId + '" src="/uploads/' + fileName + '">' +
             '               </div>' +
             '           </div>' +
             '           <div class="modal-footer">' +
@@ -69,7 +86,7 @@ function initializeCropperDropzone( selector ) {
         var $cropperModal = $(modalTemplate);
 
         $cropperModal.modal('show').on("shown.bs.modal", function () {
-            var cropper = new Cropper(document.getElementById('img-' + c), {
+            var cropper = new Cropper(document.getElementById('img-' + imgId), {
                 autoCropArea: 1,
                 movable: false,
                 cropBoxResizable: true,

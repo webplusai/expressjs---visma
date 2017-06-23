@@ -9,23 +9,30 @@
 }
 
 .btn-see-through {
-	border-color: rgba(255, 255, 255, 0.2);
+	border: 2px solid rgba(255, 255, 255, 0.2);
 	padding: 16px 20px;
 	border-radius: 4px;
 	background-color: transparent;
+	text-decoration: none;
 }
 
 .btn-see-through:hover {
 	background-color: #fff;
 	color: rgba(77, 92, 116, 0.70);
+	text-decoration: none;
 	-webkit-transition: all 200ms linear;
 	-ms-transition: all 200ms linear;
 	-moz-transition: all 200ms linear;
 	transition: all 200ms linear;
 }
 
+.btn-white {
+	color: #fff;
+}
+
 .card {
 	position: relative;
+	height: 315px;
 }
 
 .card:hover .card-overlay {
@@ -88,11 +95,50 @@
 
 .dropzone {
     margin: 0 auto;
-    border: 3px dashed #247bbb;
+    border: 2px dashed #ccc;
     height: 80px;
     line-height: 80px;
     width: 100%;
     text-align: center;
+    margin-bottom: 40px;
+    border-radius: 4px;
+}
+
+.dz-details {
+	float: left;
+}
+
+.dz-details .dz-size {
+	float: right;
+}
+
+.dz-details .dz-filename {
+	float: right;
+	margin: 0px 30px;
+}
+
+.dz-error-mark, .dz-success-mark {
+	display: none;
+}
+
+.dz-image {
+	float: left;
+}
+
+.dz-image img {
+	height: 100px;
+}
+
+.dz-preview {
+	position: relative;
+	padding: 20px;
+	min-height: 140px;
+	margin-bottom: 20px;
+	z-index: 1;
+}
+
+.dz-remove {
+	float: right;
 }
 
 .error-panel {
@@ -131,6 +177,14 @@
 	border-bottom: 1px solid #ccc;
 }
 
+.help-block {
+	color: #a94442;
+}
+
+.help-block ul {
+	list-style-type: none;
+}
+
 img {
 	max-width: 100%;
 }
@@ -138,6 +192,10 @@ img {
 .logo-link {
 	height: 88px;
 	position: relative;
+}
+
+.mce-tinymce {
+	margin-bottom: 20px !important;
 }
 
 .nav-menu {
@@ -172,4 +230,18 @@ img {
 	top: 0;
 	bottom: 0;
 	margin: auto;
+	max-width: initial;
+}
+
+.tooltip .tooltip-inner {
+	background-color: #fff;
+	color: #737373;
+}
+
+.tooltip-arrow {
+	border-top: 5px solid #ddd !important;
+}
+
+.upload-btn {
+	margin-right: 10px;
 }

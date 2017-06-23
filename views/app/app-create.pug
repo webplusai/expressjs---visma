@@ -4,12 +4,14 @@ section.breadcrumb
 	div.container
 		h1.
 			Add App
-		span.
-			 Home
+		a(href="/")
+			span.
+				 Home
 		span.
 			 /
-		span.
-			 My Apps
+		a(href="/app")
+			span.
+				 My Apps
 		span.
 			 /
 		span.
@@ -17,62 +19,69 @@ section.breadcrumb
 
 section.form
 	div.container
-		form(method="post")
-			div.form-group.row
+		form(method="post", novalidate)
+			div.form-group.row.control-group
 				div.col-md-3.item.
 					Application Name
 					#[span.text-danger *]
-				div.col-md-6
-					input.form-control
-			div.form-group.row
+				div.col-md-6.controls
+					input.form-control(required, data-validation-required-message="Please fill out this field", name="name")
+			div.form-group.row.control-group
 				div.col-md-3.item.
 					Summary
 					#[span.text-danger *]
-				div.col-md-6
-					textarea.form-control
-			div.from-group.row
+				div.col-md-6.controls
+					textarea.form-control(required, data-validation-required-message="Please fill out this field")
+			div.from-group.row.control-group
 				div.col-md-3.item.
 					Description
 					#[span.text-danger *]
 				div.col-md-6
-					textarea.form-control#description
-			div.form-group.row
+					textarea.form-control(required, data-validation-required-message="Please fill out this field")#description
+					p.help-block
+			div.form-group.row.control-group
 				div.col-md-3.item.
 					Icon
 					#[span.text-danger *]
 				div.col-md-6
 					div#upload-icon.dropzone
-			div.form-group.row
+			div.form-group.row.control-group
 				div.col-md-3.item.
 					Images
 				div.col-md-6
 					div#upload-images.dropzone
-			div.form-group.row
+			div.form-group.row.control-group
 				div.col-md-3.item.
 					Categorizer
 					#[span.text-danger *]
-				div.col-md-6
-					input.form-control
-			div.form-group.row
+				div.col-md-6.controls
+					select.form-control.categorizer(multiple="multiple", required, data-validation-required-message="Please select at least one")
+						option Autogiro
+						option BokningsSystem
+						option CRM
+						option E-handel
+
+			div.form-group.row.control-group
 				div.col-md-3.item.
 					Website URL
 				div.col-md-6
 					input.form-control
-			div.form-group.row
+			div.form-group.row.control-group
 				div.col-md-3.item.
 					Video URL
 				div.col-md-6
 					input.form-control.video-url
 					div.video-preview
-			div.form-group.row
-				div.col-md-6.col-md-offset-3
-					input(type="checkbox")
+			div.form-group.row.control-group
+				div.col-md-3
+				div.col-md-6.controls
+					input(type="checkbox", required, data-validation-required-message="Please check this box if you want to proceed.")
 					label. 
 						 I agree to the terms and conditions.
 						#[span.text-danger *]
 			div.form-group.row
 				div.col-md-6.col-md-offset-3
-					button.btn.btn-primary.pull-right.
+					button.btn.btn-primary.pull-right(type="submit").
 						Save Draft
 
 script(src="/public/js/cropper-dropzone.js")
@@ -80,8 +89,12 @@ script.
 	Dropzone.autoDiscover = false;
 	tinymce.init({ selector:'#description' });
 	$(document).ready(function() {
-		initializeCropperDropzone("#upload-icon");
-		initializeCropperDropzone("#upload-images");
+		initializeCropperDropzone("#upload-icon", "upload-icon");
+		initializeCropperDropzone("#upload-images", "upload-images");
+
+		$(".categorizer").select2();
+
+		$("form").find("input,select,textarea").not("[type=submit]").jqBootstrapValidation({ });
 
 		$(".video-url").change(function() {
 			$(".video-preview iframe").remove();

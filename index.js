@@ -15,10 +15,12 @@ app.post('/upload', function(req, res) {
     req.pipe(req.busboy);
     req.busboy.on('file', function (fieldname, file, filename) {
         console.log("Uploading: " + filename); 
-        fstream = fs.createWriteStream(__dirname + '/uploads/' + filename);
+        var uploadedName = (new Date()).getTime() + "_" + filename;
+        fstream = fs.createWriteStream(__dirname + '/uploads/' + uploadedName);
         file.pipe(fstream);
         fstream.on('close', function () {
-            res.redirect('back');
+            res.send(uploadedName);
+            //res.redirect('back');
         });
     });
 });
