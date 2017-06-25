@@ -19,6 +19,7 @@ function initializeCropperDropzone( selector, config ) {
         clickable: false,
         maxFiles: config.maxFiles,
         init: function () {
+            $(selector).append($(selector + ' .dz-preview').detach());
             this.on('success', function (file, response) {
                 var $button = $('<a href="#" class="js-open-cropper-modal hidden" data-file-name="' + response + '">Crop & Upload</a>');
                 setTimeout(function() {
@@ -66,7 +67,6 @@ function initializeCropperDropzone( selector, config ) {
             });
 
             this.on('addedfile', function(file) {
-                
                 if ( config.fileType == "icon" ) {
                     var reader = new FileReader();
                     reader.readAsDataURL(file);

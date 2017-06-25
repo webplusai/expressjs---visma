@@ -29,8 +29,11 @@ router.get('/app/edit/:id', function(req, res) {
 	var request = https.request(helper.getOptions('/apps/' + req.params.id + '/versions/1' + '?developerId=1', 'GET'), function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
-			console.log('Response: ' + chunk);
-			res.render('app/app-edit', { app: JSON.parse(chunk) });
+			var app = JSON.parse(chunk);
+
+			app.customData.fileList = app.customData.files.split(',');
+			app.customData.imageList = app.customData.images.split(',');
+			res.render('app/app-edit', { app: app });
 		});
 	});
 

@@ -4,6 +4,7 @@ var fs          =   require('fs');
 var https		=	require('https');
 var formidable	=	require('formidable');
 var request 	=	require('request');
+var config 		=	require('./../config/request');
 var helper 		=	require('./../helper/router');
 
 var router 		= 	express.Router();
@@ -28,7 +29,7 @@ router.post('/upload', function(req, res){
 				formData: formData, 
 				headers: {
 					'Content-Type': 'multipart/form-data',
-					'Authorization': 'Basic ' + new Buffer( MARKETPLACE_ID + ':' + SECRET ).toString('base64')
+					'Authorization': 'Basic ' + new Buffer( config.MARKETPLACE_ID + ':' + config.SECRET ).toString('base64')
 				} 
 			}, 
 			function(err, httpResponse, body) {

@@ -26,19 +26,21 @@ section.form
 					Application Name
 					#[span.text-danger *]
 				div.col-md-6.controls
-					input.form-control(required, data-validation-required-message="Please fill out this field", name="name" value="app.name")
+					input.form-control(required, data-validation-required-message="Please fill out this field", name="name" value=app.name)
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Summary
 					#[span.text-danger *]
 				div.col-md-6.controls
-					textarea.form-control(required, data-validation-required-message="Please fill out this field", name="summary" value="app.summary")
+					textarea.form-control(required, data-validation-required-message="Please fill out this field", name="summary")
+						= app.customData.summary
 			div.from-group.row.control-group
 				div.col-md-3.item.
 					Description
 					#[span.text-danger *]
 				div.col-md-6
-					textarea.form-control(required, data-validation-required-message="Please fill out this field", name="description")#description
+					textarea.form-control(required, data-validation-required-message="Please fill out this field", name="description" )#description 
+						= app.customData.description
 					p.help-block
 			div.form-group.row.control-group
 				div.col-md-3.item.
@@ -53,6 +55,15 @@ section.form
 				div.col-md-6
 					div#upload-images.dropzone
 						input#images(name="images", type="input", class="hidden", value="")
+						each image in app.customData.imageList
+							div.dz-preview.dz-processing.dz-image-preview.dz-success.dz-complete
+								div.dz-image
+									img(data-dz-thumbnail, src=image)
+								div.dz-progress
+									span.dz-upload(data-dz-uploadprogress, style="width: 100%;").
+										Complete
+								a.dz-remove(href="javascript:void(0);" data-dz-remove)
+									i.fa.fa-trash
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Files
