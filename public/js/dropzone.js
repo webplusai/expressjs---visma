@@ -117,7 +117,7 @@
       url: null,
       method: "post",
       withCredentials: false,
-      timeout: 30000,
+      timeout: 300000,
       parallelUploads: 2,
       uploadMultiple: false,
       maxFilesize: 256,

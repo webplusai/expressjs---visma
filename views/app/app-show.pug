@@ -27,50 +27,40 @@ section.apps
 		div.container
 			div.card-group
 				div.row
-					div.col-md-6
-						div.card
-							div.card-overlay.text-center
-								btn.btn.btn-see-through(data-toggle="tooltip", title="Edit")
-									i.fa.fa-pencil
-								btn.btn.btn-see-through(data-toggle="tooltip", title="Publish")
-									i.fa.fa-rocket
-								btn.btn.btn-see-through(data-toggle="tooltip", title="Preview")
-									i.fa.fa-search
-								btn.btn.btn-see-through(data-toggle="tooltip", title="Delete")
-									i.fa.fa-trash
-							div.card-status.text-center.
-								Draft
-							div.card-content
-								div.row
-									div.col-md-4
-										div.card-image
-											img(src="//s3.amazonaws.com/cloudexchange-uat/594867851707a57fed6fd4b9.png")
-									div.col-md-8
-										div.card-title.
-											This is a test app
-										div.card-summary.
-											Test summary
+					each app in data.list
+						div.col-md-6
+							div.card
+								div.card-overlay.text-center
+									a.btn.btn-see-through(data-toggle="tooltip", title="Edit" href="/app/edit/" + app.appId)
+										i.fa.fa-pencil
+									a.btn.btn-see-through(data-toggle="tooltip", title="Publish")
+										i.fa.fa-rocket
+									a.btn.btn-see-through(data-toggle="tooltip", title="Preview")
+										i.fa.fa-search
+									a.btn.btn-see-through(data-toggle="tooltip", title="Delete")
+										i.fa.fa-trash
+								div.card-status.text-cente
+									= app.status.value
+								div.card-content
+									div.row
+										div.col-md-4
+											div.card-image
+												img(src=app.customData.icon)
+										div.col-md-8
+											div.card-title
+												= app.name
+											div.card-summary
+												= app.customData.summary
 
-script(src="/public/js/jquery.flot.min.js")
 script.
 	$(document).ready(function() {
 		$("#plot").plot(
 			[
 				{ 
-					label: "Foo",
-					data: [ [10, 1], [17, -14], [30, 5] ]
+					data: [ [0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0], [9, 0], [10, 0], [11, 0] ]
 				},
-				{ 
-					label: "Bar",
-					data: [ [11, 13], [19, 11], [30, -7] ] 
-				}
 			],
-			{
-				series: {
-					lines: { show: true },
-					points: { show: true }
-				}
-			}
+			flotConfig
 		).data("plot");
 		$("[data-toggle='tooltip']").tooltip();
 	});

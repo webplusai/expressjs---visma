@@ -9,35 +9,96 @@ var dataURItoBlob = function (dataURI) {
     return new Blob([ab], {type: 'image/jpeg'});
 };
 
-function initializeCropperDropzone( selector, imgId ) {
+function initializeCropperDropzone( selector, config ) {
     var showCropper = true;
 
     var options = {
-        url: "/upload",
+        url: "/api/upload",
         method: 'post',
         addRemoveLinks: true,
-        parallelUploads: 10,
         clickable: false,
-        uploadMultiple: false,
-        maxFiles: 10,
+        maxFiles: config.maxFiles,
         init: function () {
-            this.on('success', function (file,response) {
+            this.on('success', function (file, response) {
                 var $button = $('<a href="#" class="js-open-cropper-modal hidden" data-file-name="' + response + '">Crop & Upload</a>');
                 setTimeout(function() {
                     $('.dz-remove').text('');
                     $('.dz-remove').append('<i class="fa fa-trash"> </i>');
+
+                    if ( config.fileType == "icon") {
+                        $("#" + config.fileType).val(response);
+                        console.log($("#" + config.fileType).val());
+                        $(selector + ' .dz-remove:last').click(function() {
+                            $("#" + config.fileType).val('');
+                            console.log($("#" + config.fileType).val());
+                        });
+                    } else {
+                        if ( $("#" + config.fileType).val() == "" ) {
+                            $("#" + config.fileType).val($("#" + config.fileType).val() + response);
+                        } else {
+                            $("#" + config.fileType).val($("#" + config.fileType).val() + "," + response);
+                        }
+                        console.log($("#" + config.fileType).val());
+                        //$("#" + config.fileType).val($("#" + config.fileType).val().replace(/,\s*$/, ""));
+                        $(selector + ' .dz-remove:last').click(function() {
+                            $("#" + config.fileType).val($("#" + config.fileType).val().replace(',' + response, ''));
+                            $("#" + config.fileType).val($("#" + config.fileType).val().replace(response + ',', ''));
+                            $("#" + config.fileType).val($("#" + config.fileType).val().replace(response, ''));
+                            //$("#" + config.fileType).val($("#" + config.fileType).val().replace(',,', ','));
+                            console.log($("#" + config.fileType).val());
+                        });
+                    }
                 }, 0);
                 
                 $(file.previewElement).append($button);
-                if (showCropper == true) {
+                if (showCropper == true && config.bCropper == true) {
                     $button.trigger('click');
-                    myDropzone.removeFile(file);
+                    this.removeFile(file);
                     $(".modal.fade").remove();
                     showCropper = false;
-                } else {
-                    setTimeout(function() {
-                        $('.dz-preview:last-child .dz-filename span').text(file.name.substring(14));
-                    });
+                }
+
+                $(selector + " .dz-upload").text("Complete");
+            });
+
+            this.on('drop', function (event) {
+                
+            });
+
+            this.on('addedfile', function(file) {
+                
+                if ( config.fileType == "icon" ) {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function(e) {
+
+                        var $button = $('<a href="#" class="js-open-cropper-modal hidden" data-file-name="' + e.target.result + '">Crop & Upload</a>');
+
+                        $(file.previewElement).append($button);
+
+                        if (showCropper == true) {
+                            $button.trigger('click');
+                            $(".modal.fade").remove();
+                            myDropzone.removeFile(file);
+                            showCropper = false;
+                        }
+                    };
+                }
+
+                if ( config.bFile ) {
+                    $(selector + " .dz-image *").remove();
+                    $(selector + " .dz-preview .dz-image").append("<i class='fa fa-file'> </i>");
+                }
+            });
+
+            this.on('maxfilesexceeded', function(file) {
+                var files = this.files;
+
+                if ( files.length > config.maxFiles ) {
+                    for( i = 0; i < files.length; i++ ) { 
+                        this.removeFile(files[i]);
+                    } 
+                    this.addFile(file);
                 }
             });
         }
@@ -67,7 +128,7 @@ function initializeCropperDropzone( selector, imgId ) {
             '           </div>' +
             '           <div class="modal-body">' +
             '               <div class="image-container">' +
-            '                   <img id="img-' + imgId + '" src="/uploads/' + fileName + '">' +
+            '                   <img id="img-' + config.fileType + '" src="' + fileName + '">' +
             '               </div>' +
             '           </div>' +
             '           <div class="modal-footer">' +
@@ -86,7 +147,7 @@ function initializeCropperDropzone( selector, imgId ) {
         var $cropperModal = $(modalTemplate);
 
         $cropperModal.modal('show').on("shown.bs.modal", function () {
-            var cropper = new Cropper(document.getElementById('img-' + imgId), {
+            var cropper = new Cropper(document.getElementById('img-' + config.fileType), {
                 autoCropArea: 1,
                 movable: false,
                 cropBoxResizable: true,
@@ -109,6 +170,7 @@ function initializeCropperDropzone( selector, imgId ) {
                         }
                     }
                     myDropzone.addFile(croppedFile);
+                    myDropzone.processQueue();
                     $this.modal('hide');
                 })
                 .on('click', '.rotate-right', function () {

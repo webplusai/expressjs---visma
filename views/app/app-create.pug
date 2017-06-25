@@ -19,7 +19,7 @@ section.breadcrumb
 
 section.form
 	div.container
-		form(method="post", novalidate)
+		form.form(method="post", action="/api/app" novalidate)
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Application Name
@@ -31,13 +31,13 @@ section.form
 					Summary
 					#[span.text-danger *]
 				div.col-md-6.controls
-					textarea.form-control(required, data-validation-required-message="Please fill out this field")
+					textarea.form-control(required, data-validation-required-message="Please fill out this field", name="summary")
 			div.from-group.row.control-group
 				div.col-md-3.item.
 					Description
 					#[span.text-danger *]
 				div.col-md-6
-					textarea.form-control(required, data-validation-required-message="Please fill out this field")#description
+					textarea.form-control(required, data-validation-required-message="Please fill out this field", name="description")#description
 					p.help-block
 			div.form-group.row.control-group
 				div.col-md-3.item.
@@ -45,17 +45,25 @@ section.form
 					#[span.text-danger *]
 				div.col-md-6
 					div#upload-icon.dropzone
+						input#icon(name="icon", type="input", class="hidden", value="")
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Images
 				div.col-md-6
 					div#upload-images.dropzone
+						input#images(name="images", type="input", class="hidden", value="")
 			div.form-group.row.control-group
 				div.col-md-3.item.
-					Categorizer
+					Files
+				div.col-md-6
+					div#upload-files.dropzone
+						input#files(name="files", type="input", class="hidden", value="")
+			div.form-group.row.control-group
+				div.col-md-3.item.
+					Category
 					#[span.text-danger *]
 				div.col-md-6.controls
-					select.form-control.categorizer(multiple="multiple", required, data-validation-required-message="Please select at least one")
+					select.form-control.categorizer(multiple="multiple", required, data-validation-required-message="Please select at least one", name="category")
 						option Autogiro
 						option BokningsSystem
 						option CRM
@@ -65,12 +73,12 @@ section.form
 				div.col-md-3.item.
 					Website URL
 				div.col-md-6
-					input.form-control
+					input.form-control(name="website_url")
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Video URL
 				div.col-md-6
-					input.form-control.video-url
+					input.form-control.video-url(name="video_url")
 					div.video-preview
 			div.form-group.row.control-group
 				div.col-md-3
@@ -81,20 +89,66 @@ section.form
 						#[span.text-danger *]
 			div.form-group.row
 				div.col-md-6.col-md-offset-3
-					button.btn.btn-primary.pull-right(type="submit").
+					button.btn.btn-primary.pull-right(type="submit", onclick="bSubmit=false;").
 						Save Draft
 
 script(src="/public/js/cropper-dropzone.js")
 script.
 	Dropzone.autoDiscover = false;
 	tinymce.init({ selector:'#description' });
+	var bSubmit = false;
+
 	$(document).ready(function() {
-		initializeCropperDropzone("#upload-icon", "upload-icon");
-		initializeCropperDropzone("#upload-images", "upload-images");
+		initializeCropperDropzone("#upload-icon", {
+			fileType: "icon",
+			bCropper: true,
+			maxFiles: 1,
+			autoProcessQueue: false,
+		});
+		initializeCropperDropzone("#upload-images", {
+			fileType: "images",
+			maxFiles: 10,
+			autoProcessQueue: true,
+		});
+		initializeCropperDropzone("#upload-files", {
+			fileType: "files",
+			bFile: true,
+			maxFiles: 10,
+			autoProcessQueue: true,
+		});
 
 		$(".categorizer").select2();
 
-		$("form").find("input,select,textarea").not("[type=submit]").jqBootstrapValidation({ });
+		$("form").find("input,select,textarea").not("[type='submit']").jqBootstrapValidation({ });
+
+		$("form").submit(function(e) {
+			if (bSubmit == false) {
+				var modal =
+						'<div id="modal_publish" class="modal fade" role="dialog">' +
+						'	<div class="modal-dialog">' + 
+						'		<div class="modal-content">' + 
+						'			<div class="modal-header">' +
+						'				<button class="close" data-dismiss="modal"> &times; </button>' +
+						'				<h4 class="modal-title"> Publish App </h4>' +
+						'			</div>' +
+						'			<div class="modal-body">' +
+						'				<p> Do you also want to submit this app to the marketplace right now? </p>' +
+						'			</div>' +
+						'			<div class="modal-footer">' +
+						'				<button class="btn btn-default" data-dismiss="modal"> Later </button>' +
+						'				<button class="btn btn-primary" onclick="bSubmit=true; $(\'form\').submit();"> Yes </button>' +
+						'			</div>' +
+						'		</div>' +
+						'	</div>' +
+						'</div>';
+
+				$(modal).modal();
+				return false;
+			} else {
+				return true;
+			}
+		});
+
 
 		$(".video-url").change(function() {
 			$(".video-preview iframe").remove();

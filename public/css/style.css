@@ -33,6 +33,7 @@
 .card {
 	position: relative;
 	height: 315px;
+	margin-bottom: 30px;
 }
 
 .card:hover .card-overlay {
@@ -86,6 +87,7 @@
 	color: #efefef;
 	padding: 10px;
 	border-radius: 4px;
+	text-align: center;
 }
 
 .card-title {
@@ -104,41 +106,50 @@
     border-radius: 4px;
 }
 
-.dz-details {
-	float: left;
-}
-
-.dz-details .dz-size {
-	float: right;
-}
-
-.dz-details .dz-filename {
-	float: right;
-	margin: 0px 30px;
-}
-
-.dz-error-mark, .dz-success-mark {
+.dz-details, .dz-error-mark, .dz-error-message, .dz-success-mark {
 	display: none;
 }
 
 .dz-image {
 	float: left;
+	font-size: 80px;
+	width: 100px;
 }
 
 .dz-image img {
+	width: 100px;
 	height: 100px;
 }
 
 .dz-preview {
 	position: relative;
-	padding: 20px;
-	min-height: 140px;
+	padding: 0px 20px;
+	height: 140px;
+	line-height: 140px;
 	margin-bottom: 20px;
 	z-index: 1;
 }
 
+.dz-progress {
+	float: left;
+    width: calc(100% - 180px);
+    margin-left: 40px;
+    margin-right: 10px;
+    margin-top: 60px;
+}
+
 .dz-remove {
 	float: right;
+	font-size: 17px;
+}
+
+.dz-upload { 
+    display: block; 
+    background-color: #5cb85c; 
+    border-radius: 4px;
+    height: 20px;
+    line-height: 20px;
+    width: 0%;
 }
 
 .error-panel {

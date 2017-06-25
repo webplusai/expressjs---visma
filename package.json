@@ -9,10 +9,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "connect-busboy": "0.0.2",
     "express": "^4.15.3",
+    "form-data": "^2.2.0",
+    "formidable": "^1.1.1",
     "fs": "0.0.1-security",
+    "https": "^1.0.0",
     "path": "^0.12.7",
-    "pug": "^2.0.0-rc.2"
+    "pug": "^2.0.0-rc.2",
+    "request": "^2.81.0",
+    "request-progress": "^3.0.0"
   }
 }
