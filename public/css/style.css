@@ -160,6 +160,10 @@
 	border-radius: 4px;
 }
 
+#modal_publish .fa-spinner, #modal_delete .fa-spinner {
+	animation: spin 2000ms infinite linear;
+}
+
 .footer {
 	height: 40px;
 	text-align: center;
@@ -255,4 +259,12 @@ img {
 
 .upload-btn {
 	margin-right: 10px;
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	} to {
+		transform: rotate(360deg);
+	}
 }

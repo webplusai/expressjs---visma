@@ -50,13 +50,13 @@ router.post('/upload', function(req, res){
 
 });
 
-router.post('/app', function(req, res) {
+router.post('/app/create', function(req, res) {
 	var body = {
 		developerId: 1,
 		name: req.body.name,
 		customData: req.body
 	}
-	
+
 	var post = https.request(helper.getOptions('/apps', 'POST'), function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function (chunk) {
@@ -65,6 +65,93 @@ router.post('/app', function(req, res) {
 		});
 	});
 
+	post.write(body);
+	post.end();
+});
+
+router.post('/app/update', function(req, res) {
+	var body = {
+		developerId: 1,
+		name: req.body.name,
+		customData: req.body
+	}
+
+	console.log(body);
+
+	var post = https.request(helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version, 'POST'), function(response) {
+		response.setEncoding('utf8');
+		response.on('data', function(chunk) {
+			console.log('Response: ' + chunk);
+			res.redirect('/app');
+		});
+	});
+
+	post.write(body);
+	post.end();
+});
+
+router.post('/app/publish', function(req, res) {
+	var body = {
+		developerId: 1,
+		version: parseInt(req.body.version)
+	};
+
+	console.log(body);
+	var post = https.request(helper.getOptions('/apps/' + req.body.appId + '/publish', 'POST'), function(response) {
+		response.setEncoding('utf8');
+		response.on('data', function(chunk) {
+			console.log('Response: ' + chunk);
+			res.send('success');
+		});
+	});
+
+	post.write(JSON.stringify(body));
+	post.end();
+});
+
+router.post('/app/delete', function(req, res) {
+	var body = {
+		developerId: 1
+	};
+
+	var post = https.request(helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version + '?developerId=1', 'DELETE'), function(response) {
+		response.setEncoding('utf8');
+		response.on('data', function(chunk) {
+			console.log('Response: ' + chunk);
+			res.send('success');
+		});
+	});
+
+	post.end();
+});
+
+router.post('/app', function(req, res) {
+
+	var body = {
+		developerId: 1,
+		name: req.body.name,
+		customData: req.body
+	}
+
+	if ( req.body.method == 'put') {
+		console.log(req.body);
+		console.log('/apps/' + req.body.appId + '/versions' + req.body.version);
+		var post = https.request(helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version, 'POST'), function(response) {
+			response.setEncoding('utf8');
+			response.on('data', function(chunk) {
+				console.log('Response: ' + chunk);
+				res.redirect('/app');
+			});
+		});
+	} else {
+		var post = https.request(helper.getOptions('/apps', 'POST'), function(response) {
+			response.setEncoding('utf8');
+			response.on('data', function (chunk) {
+				console.log('Response: ' + chunk);
+				res.redirect('/app');
+			});
+		});
+	}
 	post.write(JSON.stringify(body));
 	post.end();
 });

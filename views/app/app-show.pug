@@ -33,11 +33,11 @@ section.apps
 								div.card-overlay.text-center
 									a.btn.btn-see-through(data-toggle="tooltip", title="Edit" href="/app/edit/" + app.appId)
 										i.fa.fa-pencil
-									a.btn.btn-see-through(data-toggle="tooltip", title="Publish")
+									a.btn.btn-see-through(data-toggle="tooltip", title="Publish" onclick="showPublishDialog('" + app.appId + "', '" + app.version + "')")
 										i.fa.fa-rocket
 									a.btn.btn-see-through(data-toggle="tooltip", title="Preview")
 										i.fa.fa-search
-									a.btn.btn-see-through(data-toggle="tooltip", title="Delete")
+									a.btn.btn-see-through(data-toggle="tooltip", title="Delete" onclick="showDeleteDialog('" + app.appId + "', '" + app.version + "')")
 										i.fa.fa-trash
 								div.card-status.text-cente
 									= app.status.value
@@ -53,6 +53,82 @@ section.apps
 												= app.customData.summary
 
 script.
+
+	function showPublishDialog(appId, version) {
+		var modal =
+		'<div id="modal_publish" class="modal fade" role="dialog">' +
+		'	<div class="modal-dialog">' + 
+		'		<div class="modal-content">' + 
+		'			<div class="modal-header">' +
+		'				<button class="close" data-dismiss="modal"> &times; </button>' +
+		'				<h4 class="modal-title"> Publish App? </h4>' +
+		'			</div>' +
+		'			<div class="modal-body">' +
+		'				<p> Are you sure that you want to publish this app to the marketplace? </p>' +
+		'			</div>' +
+		'			<div class="modal-footer">' +
+		'				<button class="btn btn-default" data-dismiss="modal"> Cancel </button>' +
+		'				<button class="btn btn-success" onclick="publishApp(this, \'' + appId + '\', \'' + version + '\')"> <i class="fa fa-spinner hidden"> </i> Publish </button>' +
+		'			</div>' +
+		'		</div>' +
+		'	</div>' +
+		'</div>';
+
+		$(modal).modal();
+	}
+
+	function showDeleteDialog(appId, version) {
+		var modal =
+		'<div id="modal_delete" class="modal fade" role="dialog">' +
+		'	<div class="modal-dialog">' + 
+		'		<div class="modal-content">' + 
+		'			<div class="modal-header">' +
+		'				<button class="close" data-dismiss="modal"> &times; </button>' +
+		'				<h4 class="modal-title"> Delete Version? </h4>' +
+		'			</div>' +
+		'			<div class="modal-body">' +
+		'				<p> Are you sure that you want to delete this Draft version of your app? </p>' +
+		'			</div>' +
+		'			<div class="modal-footer">' +
+		'				<button class="btn btn-default" data-dismiss="modal"> Cancel </button>' +
+		'				<button class="btn btn-danger" onclick="deleteApp(this, \'' + appId + '\', \'' + version + '\')"> <i class="fa fa-spinner hidden"> </i> Delete </button>' +
+		'			</div>' +
+		'		</div>' +
+		'	</div>' +
+		'</div>';
+
+		$(modal).modal();
+	}
+
+	function publishApp(obj, appId, version) {
+		$(obj).prop('disabled', true);
+		$(obj).find('.fa-spinner').removeClass('hidden');
+		console.log("Publish clicked");
+		$.post('/api/app/publish', {
+			developerId: 1,
+			version: 1,
+			appId: appId
+		}, function(response) {
+			$(obj).prop('disabled', false);
+			$(obj).find('.fa-spinner').addClass('hidden');
+			location.reload();
+		});
+	}
+
+	function deleteApp(obj, appId, version) {
+		$(obj).prop('disabled', true);
+		$(obj).find('.fa-spinner').removeClass('hidden');
+		$.post('/api/app/delete', {
+			developerId: 1,
+			version: 1,
+			appId: appId
+		}, function(response) {
+			$(obj).prop('disabled', false);
+			$(obj).find('.fa-spinner').addClass('hidden');
+			location.reload();
+		});
+	}
+
 	$(document).ready(function() {
 		$("#plot").plot(
 			[

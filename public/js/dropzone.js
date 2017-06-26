@@ -379,7 +379,9 @@
         if (file.previewElement) {
           file.previewElement.classList.add("dz-processing");
           if (file._removeLink) {
-            return file._removeLink.textContent = this.options.dictCancelUpload;
+            file._removeLink.textContent = '';
+            file._removeLink.innerHTML = '<i class="fa fa-trash"> </i>';
+            //return file._removeLink.textContent = this.options.dictCancelUpload;
           }
         }
       },
@@ -415,7 +417,9 @@
       canceledmultiple: noop,
       complete: function(file) {
         if (file._removeLink) {
-          file._removeLink.textContent = this.options.dictRemoveFile;
+          file._removeLink.textContent = '';
+          file._removeLink.innerHTML = '<i class="fa fa-trash"> </i>';
+          //file._removeLink.textContent = this.options.dictRemoveFile;
         }
         if (file.previewElement) {
           return file.previewElement.classList.add("dz-complete");

@@ -23,9 +23,6 @@ function initializeCropperDropzone( selector, config ) {
             this.on('success', function (file, response) {
                 var $button = $('<a href="#" class="js-open-cropper-modal hidden" data-file-name="' + response + '">Crop & Upload</a>');
                 setTimeout(function() {
-                    $('.dz-remove').text('');
-                    $('.dz-remove').append('<i class="fa fa-trash"> </i>');
-
                     if ( config.fileType == "icon") {
                         $("#" + config.fileType).val(response);
                         console.log($("#" + config.fileType).val());
@@ -40,12 +37,10 @@ function initializeCropperDropzone( selector, config ) {
                             $("#" + config.fileType).val($("#" + config.fileType).val() + "," + response);
                         }
                         console.log($("#" + config.fileType).val());
-                        //$("#" + config.fileType).val($("#" + config.fileType).val().replace(/,\s*$/, ""));
                         $(selector + ' .dz-remove:last').click(function() {
                             $("#" + config.fileType).val($("#" + config.fileType).val().replace(',' + response, ''));
                             $("#" + config.fileType).val($("#" + config.fileType).val().replace(response + ',', ''));
                             $("#" + config.fileType).val($("#" + config.fileType).val().replace(response, ''));
-                            //$("#" + config.fileType).val($("#" + config.fileType).val().replace(',,', ','));
                             console.log($("#" + config.fileType).val());
                         });
                     }

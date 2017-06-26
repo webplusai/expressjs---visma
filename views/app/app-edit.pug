@@ -21,6 +21,9 @@ section.form
 	div.container
 		div#plot
 		form.form(method="post", action="/api/app" novalidate)
+			input.hidden(name="method", value="put")
+			input.hidden(name="appId", value=app.appId)
+			input.hidden(name="version", value=app.version)
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Application Name
@@ -49,12 +52,21 @@ section.form
 				div.col-md-6
 					div#upload-icon.dropzone
 						input#icon(name="icon", type="input", class="hidden", value="")
+						if app.customData.icon
+							div.dz-preview.dz-processing.dz-image-preview.dz-success.dz-complete
+								div.dz-image
+									img(data-dz-thumbnail, src=app.customData.icon)
+								div.dz-progress
+									span.dz-upload(data-dz-uploadprogress, style="width: 100%;").
+										Complete
+								a.dz-remove(href="javascript:void(0);" data-dz-remove onclick="removeFile(this, '#icon', '" + app.customData.icon + "')")
+									i.fa.fa-trash
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Images
 				div.col-md-6
 					div#upload-images.dropzone
-						input#images(name="images", type="input", class="hidden", value="")
+						input#images(name="images", type="input", class="hidden", value=app.customData.images)
 						each image in app.customData.imageList
 							div.dz-preview.dz-processing.dz-image-preview.dz-success.dz-complete
 								div.dz-image
@@ -62,35 +74,56 @@ section.form
 								div.dz-progress
 									span.dz-upload(data-dz-uploadprogress, style="width: 100%;").
 										Complete
-								a.dz-remove(href="javascript:void(0);" data-dz-remove)
+								a.dz-remove(href="javascript:void(0);" data-dz-remove onclick="removeFile(this, '#images', '" + image + "')")
 									i.fa.fa-trash
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Files
 				div.col-md-6
 					div#upload-files.dropzone
-						input#files(name="files", type="input", class="hidden", value="")
+						input#files(name="files", type="input", class="hidden", value=app.customData.files)
+						each file in app.customData.fileList
+							div.dz-preview.dz-processing.dz-image-preview.dz-success.dz-complete
+								div.dz-image
+									i.fa.fa-file
+								div.dz-progress
+									span.dz-upload(data-dz-uploadprogress, style="width: 100%;").
+										Complete
+								a.dz-remove(href="javascript:void(0);" data-dz-remove onclick="removeFile(this, '#files', '" + file + "')")
+									i.fa.fa-trash
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Category
 					#[span.text-danger *]
 				div.col-md-6.controls
-					select.form-control.categorizer(multiple="multiple", required, data-validation-required-message="Please select at least one", name="category")
-						option Autogiro
-						option BokningsSystem
-						option CRM
-						option E-handel
+					select.form-control.categorizer(multiple="multiple", required, data-validation-required-message="Please select at least one", name="category" value=app.customData.category)
+						if app.customData.category.indexOf('Autogiro') != -1
+							option(selected="selected") Autogiro
+						else
+							option Autogiro
+						if app.customData.category.indexOf('BokningsSystem') != -1
+							option(selected="selected") BokningsSystem
+						else
+							option BokningsSystem
+						if app.customData.category.indexOf('CRM') != -1
+							option(selected="selected") CRM
+						else
+							option CRM
+						if app.customData.category.indexOf("E-handel") != -1
+							option(selected="selected") E-handel
+						else
+							option E-handel
 
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Website URL
 				div.col-md-6
-					input.form-control(name="website_url")
+					input.form-control(name="website_url", value=app.customData.website_url)
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Video URL
 				div.col-md-6
-					input.form-control.video-url(name="video_url")
+					input.form-control.video-url(name="video_url", value=app.customData.video_url)
 					div.video-preview
 			div.form-group.row.control-group
 				div.col-md-3
@@ -109,6 +142,13 @@ script.
 	Dropzone.autoDiscover = false;
 	tinymce.init({ selector:'#description' });
 	var bSubmit = false;
+
+	function removeFile(obj, selector, file) {
+		$(selector).val($(selector).val().replace(',' + file, ''));
+		$(selector).val($(selector).val().replace(file + ',', ''));
+		$(selector).val($(selector).val().replace(file, ''));
+		$(obj).parent().remove();
+	}
 
 	$(document).ready(function() {
 		initializeCropperDropzone("#upload-icon", {
