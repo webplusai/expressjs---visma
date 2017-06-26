@@ -2,10 +2,13 @@ include ./../header.pug
 
 section.statistics
 	div.container.section-container
-		div.error-panel
-			i.fa.fa-exclamation-circle
-			span.
-				 Drafts must be published before they can be listed on the marketplace.
+		each app in data.list
+			if (app.status.value == "inDevelopment")
+				div.error-panel
+					i.fa.fa-exclamation-circle
+					span.
+						 Drafts must be published before they can be listed on the marketplace.
+				- break
 		h1
 			i.fa.fa-search
 			span.
@@ -33,14 +36,27 @@ section.apps
 								div.card-overlay.text-center
 									a.btn.btn-see-through(data-toggle="tooltip", title="Edit" href="/app/edit/" + app.appId)
 										i.fa.fa-pencil
-									a.btn.btn-see-through(data-toggle="tooltip", title="Publish" onclick="showPublishDialog('" + app.appId + "', '" + app.version + "')")
-										i.fa.fa-rocket
-									a.btn.btn-see-through(data-toggle="tooltip", title="Preview")
+									if (app.status.value == 'inDevelopment')
+										a.btn.btn-see-through(data-toggle="tooltip", title="Publish" onclick="showPublishDialog('" + app.appId + "', '" + app.version + "')")
+											i.fa.fa-rocket
+									a.btn.btn-see-through(data-toggle="tooltip", title="Preview" href="http://visma-market.openchannel.io/details/" + app.appId + "/" + app.version, target="_blank")
 										i.fa.fa-search
 									a.btn.btn-see-through(data-toggle="tooltip", title="Delete" onclick="showDeleteDialog('" + app.appId + "', '" + app.version + "')")
 										i.fa.fa-trash
-								div.card-status.text-cente
-									= app.status.value
+								div(class=app.status.value + " card-status text-center")
+									case app.status.value
+										when 'approved'
+											span Approved
+										when 'inDevelopment'
+											span Draft
+										when 'inReview'
+											span Review
+										when 'pending'
+											span Pending Approval
+										when 'suspended'
+											span Suspended
+										when 'rejected'
+											span Rejected
 								div.card-content
 									div.row
 										div.col-md-4

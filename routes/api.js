@@ -110,9 +110,6 @@ router.post('/app/publish', function(req, res) {
 });
 
 router.post('/app/delete', function(req, res) {
-	var body = {
-		developerId: 1
-	};
 
 	var post = https.request(helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version + '?developerId=1', 'DELETE'), function(response) {
 		response.setEncoding('utf8');

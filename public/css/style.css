@@ -34,6 +34,7 @@
 	position: relative;
 	height: 315px;
 	margin-bottom: 30px;
+	box-shadow: 2px 2px 6px #d8d8d8;
 }
 
 .card:hover .card-overlay {
@@ -83,11 +84,39 @@
 }
 
 .card-status {
-	background-color: #737373;
-	color: #efefef;
 	padding: 10px;
 	border-radius: 4px;
 	text-align: center;
+}
+
+.card-status.approved{
+	background-color: #3c763d;
+	color: #dff0d8;
+}
+
+.card-status.inDevelopment{
+	background-color:#737373;
+	color: #efefef;
+}
+
+.card-status.inReview{
+	background-color: #31708f;
+	color: #d9edf7;
+}
+
+.card-status.pending{
+	background-color: #31708f;
+	color: #d9edf7;
+}
+
+.card-status.suspended{
+	background-color: #8a6d3b;
+	color: #fff;
+}
+
+.card-status.rejected{
+	background-color: #a94442;
+	color: #fff;
 }
 
 .card-title {
@@ -176,6 +205,7 @@
 	padding: 0px 5px;
 	border-left: 1px solid #5a5a5a;
 	color: #5a5a5a;
+	text-decoration: none;
 }
 
 .form form #description {
@@ -190,6 +220,10 @@
 	height: auto !important;
 	max-height: 88px;
 	border-bottom: 1px solid #ccc;
+}
+
+.header a {
+	text-decoration: none;
 }
 
 .help-block {
