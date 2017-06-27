@@ -101,6 +101,14 @@ script.
 	tinymce.init({ selector:'#description' });
 	var bSubmit = false;
 
+	function createApp(obj, publish) {
+		bSubmit=true; 
+		$('#publish').val(publish);
+		$(obj).find('.fa-spinner').removeClass('hidden');
+		$(obj).prop('disabled', true);
+		$('form').submit();
+	}
+
 	$(document).ready(function() {
 		initializeCropperDropzone("#upload-icon", {
 			fileType: "icon",
@@ -138,8 +146,8 @@ script.
 							'				<p> Do you also want to submit this app to the marketplace right now? </p>' +
 							'			</div>' +
 							'			<div class="modal-footer">' +
-							'				<button class="btn btn-default" onclick="bSubmit=true; $(\'#publish\').val(\'false\'); $(\'form\').submit();"> Later </button>' +
-							'				<button class="btn btn-primary" onclick="bSubmit=true; $(\'#publish\').val(\'true\'); $(\'form\').submit();"> Yes </button>' +
+							'				<button class="btn btn-default" onclick="createApp(this, \'false\');"> <i class="fa fa-spinner hidden"> </i> Later </button>' +
+							'				<button class="btn btn-primary" onclick="createApp(this, \'true\');"> <i class="fa fa-spinner hidden"> </i> Yes </button>' +
 							'			</div>' +
 							'		</div>' +
 							'	</div>' +
