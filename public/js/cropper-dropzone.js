@@ -59,7 +59,7 @@ function initializeCropperDropzone( selector, config ) {
                     showCropper = false;
                 }
 
-                $(selector + " .dz-upload").text("Complete");
+                $(selector + " .dz-upload:last").text("Complete");
             });
 
             this.on('drop', function (event) {
@@ -87,6 +87,7 @@ function initializeCropperDropzone( selector, config ) {
                             $button.trigger('click');
                             $(".modal.fade").remove();
                             myDropzone.removeFile(file);
+                            $(selector + ' .dz-preview').remove();
                             showCropper = false;
                         }
                     };
@@ -107,6 +108,10 @@ function initializeCropperDropzone( selector, config ) {
                     } 
                     this.addFile(file);
                 }
+            });
+
+            this.on('uploadprogress', function(file, progress) {
+                $(selector + ' .dz-upload:last').text('99%');
             });
         }
     }

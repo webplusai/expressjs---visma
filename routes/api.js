@@ -162,39 +162,4 @@ router.post('/app/delete', function(req, res) {
 	post.end();
 });
 
-router.post('/app', function(req, res) {
-
-	var body = {
-		developerId: 1,
-		name: req.body.name,
-		customData: req.body
-	}
-
-	if ( req.body.method == 'put') {
-		console.log(req.body);
-		console.log('/apps/' + req.body.appId + '/versions' + req.body.version);
-		var post = https.request(helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version, 'POST'), function(response) {
-			response.setEncoding('utf8');
-			response.on('data', function(chunk) {
-				console.log('Response: ' + chunk);
-				res.redirect('/app');
-			});
-		});
-	} else {
-		var post = https.request(helper.getOptions('/apps', 'POST'), function(response) {
-			response.setEncoding('utf8');
-			response.on('data', function (chunk) {
-				console.log('Response: ' + chunk);
-				res.redirect('/app');
-			});
-		});
-	}
-	post.write(JSON.stringify(body));
-	post.end();
-});
-
-router.put('/app', function(req, res) {
-
-});
-
 module.exports = router;

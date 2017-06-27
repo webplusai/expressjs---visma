@@ -14,7 +14,18 @@ router.get('/app', function(req, res) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
 			// console.log('Response: ' + chunk);
-			res.render('app/app-show', {data: JSON.parse(chunk)});
+			//res.render('app/app-show', {data: JSON.parse(chunk)});
+			var data = JSON.parse(chunk);
+			var get = https.request(helper.getOptions('/stats/series/total', 'GET'), function(response) {
+				response.setEncoding('utf8');
+				response.on('data', function(chunk) {
+					console.log('Response: ' + chunk);
+					data.statistics = JSON.parse(chunk);
+					res.render('app/app-show', {data: data});
+				})
+			});
+
+			get.end();
 		});
 	});
 

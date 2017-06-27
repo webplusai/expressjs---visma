@@ -179,6 +179,7 @@
 .dz-upload { 
     display: block; 
     background-color: #5cb85c; 
+    color: #fff;
     border-radius: 4px;
     height: 20px;
     line-height: 20px;
