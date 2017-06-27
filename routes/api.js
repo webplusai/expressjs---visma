@@ -60,7 +60,6 @@ router.post('/app/create', function(req, res) {
 	var post = https.request(helper.getOptions('/apps', 'POST'), function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function (chunk) {
-			console.log(JSON.stringify(req.body));
 			if (req.body.publish == 'true') {
 				var app = JSON.parse(chunk);
 				var body = {
@@ -97,13 +96,33 @@ router.post('/app/update', function(req, res) {
 		customData: req.body
 	}
 
-	console.log(body);
-
 	var post = https.request(helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version, 'POST'), function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
-			console.log('Response: ' + chunk);
-			res.redirect('/app');
+
+			if (req.body.publish == 'true') {
+				var app = JSON.parse(chunk);
+				var body = {
+					developerId: 1,
+					version: parseInt(app.version)
+				};
+
+				console.log(body);
+				var post = https.request(helper.getOptions('/apps/' + app.appId + '/publish', 'POST'), function(response) {
+					response.setEncoding('utf8');
+					response.on('data', function(chunk) {
+						console.log('Response: ' + chunk);
+						res.redirect('/app');
+					});
+				});
+
+				post.write(JSON.stringify(body));
+				post.end();
+			} else {
+				console.log('Response: ' + chunk);
+				res.redirect('/app');
+			}
+
 		});
 	});
 

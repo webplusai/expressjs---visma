@@ -51,7 +51,7 @@ section.form
 					#[span.text-danger *]
 				div.col-md-6
 					div#upload-icon.dropzone
-						input#icon(name="icon", type="input", class="hidden", value="")
+						input#icon(name="icon", type="input", class="hidden", value=app.customData.icon)
 						if app.customData.icon
 							div.dz-preview.dz-processing.dz-image-preview.dz-success.dz-complete
 								div.dz-image
@@ -135,13 +135,21 @@ section.form
 			div.form-group.row
 				div.col-md-6.col-md-offset-3
 					button.btn.btn-primary.pull-right(type="submit", onclick="bSubmit=false;").
-						Save Draft
+						Save
 
 script(src="/public/js/cropper-dropzone.js")
 script.
 	Dropzone.autoDiscover = false;
 	tinymce.init({ selector:'#description' });
 	var bSubmit = false;
+
+	function editApp(obj, publish) {
+		bSubmit=true; 
+		$('#publish').val(publish);
+		$(obj).find('.fa-spinner').removeClass('hidden');
+		$(obj).prop('disabled', true);
+		$('form').submit();
+	}
 
 	function removeFile(obj, selector, file) {
 		$(selector).val($(selector).val().replace(',' + file, ''));
@@ -173,32 +181,39 @@ script.
 
 		$("form").find("input,select,textarea").not("[type='submit']").jqBootstrapValidation({ });
 
-		$("form").submit(function(e) {
-			if (bSubmit == false) {
-				var modal =
-						'<div id="modal_publish" class="modal fade" role="dialog">' +
-						'	<div class="modal-dialog">' + 
-						'		<div class="modal-content">' + 
-						'			<div class="modal-header">' +
-						'				<button class="close" data-dismiss="modal"> &times; </button>' +
-						'				<h4 class="modal-title"> Publish App </h4>' +
-						'			</div>' +
-						'			<div class="modal-body">' +
-						'				<p> Do you also want to submit this app to the marketplace right now? </p>' +
-						'			</div>' +
-						'			<div class="modal-footer">' +
-						'				<button class="btn btn-default" data-dismiss="modal"> Later </button>' +
-						'				<button class="btn btn-primary" onclick="bSubmit=true; $(\'form\').submit();"> Yes </button>' +
-						'			</div>' +
-						'		</div>' +
-						'	</div>' +
-						'</div>';
+		$("form").find("input,select,textarea").not("[type='submit']").jqBootstrapValidation({ 
+			preventSubmit: true,
+			submitSuccess: function() {
+				if (bSubmit == false) {
+					var modal =
+							'<div id="modal_publish" class="modal fade" role="dialog">' +
+							'	<div class="modal-dialog">' + 
+							'		<div class="modal-content">' + 
+							'			<div class="modal-header">' +
+							'				<button class="close" data-dismiss="modal"> &times; </button>' +
+							'				<h4 class="modal-title"> Publish App </h4>' +
+							'			</div>' +
+							'			<div class="modal-body">' +
+							'				<p> Do you also want to submit this app to the marketplace right now? </p>' +
+							'			</div>' +
+							'			<div class="modal-footer">' +
+							'				<button class="btn btn-default" onclick="editApp(this, \'false\');"> <i class="fa fa-spinner hidden"> </i> Later </button>' +
+							'				<button class="btn btn-primary" onclick="editApp(this, \'true\');"> <i class="fa fa-spinner hidden"> </i> Yes </button>' +
+							'			</div>' +
+							'		</div>' +
+							'	</div>' +
+							'</div>';
 
-				$(modal).modal();
-				return false;
-			} else {
-				return true;
+					$(modal).modal();
+					return false;
+				} else {
+					return true;
+				}
 			}
+		});
+
+		$("form").submit(function(e){
+			return bSubmit;
 		});
 
 		$("#plot").plot(
