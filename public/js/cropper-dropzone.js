@@ -18,6 +18,8 @@ function initializeCropperDropzone( selector, config ) {
         addRemoveLinks: true,
         clickable: false,
         maxFiles: config.maxFiles,
+        minWidth: config.minWidth,
+        minHeight: config.minHeight,
         init: function () {
             $(selector).append($(selector + ' .dz-preview').detach());
             this.on('success', function (file, response) {
@@ -79,17 +81,46 @@ function initializeCropperDropzone( selector, config ) {
                     reader.readAsDataURL(file);
                     reader.onload = function(e) {
 
-                        var $button = $('<a href="#" class="js-open-cropper-modal hidden" data-file-name="' + e.target.result + '">Crop & Upload</a>');
+                        var image = new Image();
+                        image.src = e.target.result;
+                        image.onload = function() {
 
-                        $(file.previewElement).append($button);
+                            console.log(config);
 
-                        if (showCropper == true) {
-                            $button.trigger('click');
-                            $(".modal.fade").remove();
-                            myDropzone.removeFile(file);
-                            $(selector + ' .dz-preview').remove();
-                            showCropper = false;
-                        }
+                            if ( this.width < config.minWidth || this.height < config.minHeight ) {
+                                myDropzone.removeFile(file);
+                                var modalTemplate =
+                                    '<div class="modal fade" tabindex="-1" role="dialog">' +
+                                    '   <div class="modal-dialog modal-md" role="document">' +
+                                    '       <div class="modal-content">' +
+                                    '           <div class="modal-header">' +
+                                    '               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                                    '               <h4 class="modal-title">Image Size</h4>' +
+                                    '           </div>' +
+                                    '           <div class="modal-body">' +
+                                    '               <p> Icon image should be at least ' + config.minWidth + 'x' + config.minHeight + ' pixels </p>' +
+                                    '           </div>' +
+                                    '           <div class="modal-footer">' +
+                                    '               <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>' +
+                                    '           </div>' +
+                                    '       </div>' +
+                                    '   </div>' +
+                                    '</div>';
+                                $(modalTemplate).modal();
+                            } else {
+                                console.log("I am triggered");
+                                var $button = $('<a href="#" class="js-open-cropper-modal hidden" data-file-name="' + e.target.result + '">Crop & Upload</a>');
+                                $(file.previewElement).append($button);
+
+                                if (showCropper == true) {
+                                    $button.trigger('click');
+                                    $(".modal.fade").remove();
+                                    myDropzone.removeFile(file);
+                                    $(selector + ' .dz-preview').remove();
+                                    showCropper = false;
+                                }
+                            }
+                        };
                     };
                 }
 
@@ -160,6 +191,7 @@ function initializeCropperDropzone( selector, config ) {
 
         $cropperModal.modal('show').on("shown.bs.modal", function () {
             var cropper = new Cropper(document.getElementById('img-' + config.fileType), {
+                aspectRatio: 1,
                 autoCropArea: 1,
                 movable: false,
                 cropBoxResizable: true,
@@ -168,6 +200,27 @@ function initializeCropperDropzone( selector, config ) {
             var $this = $(this);
             $this
                 .on('click', '.crop-upload', function () {
+                    if( $(".cropper-crop-box").width() < 100 ) {
+                        var modalTemplate =
+                            '<div class="modal fade" tabindex="-1" role="dialog">' +
+                            '   <div class="modal-dialog modal-md" role="document">' +
+                            '       <div class="modal-content">' +
+                            '           <div class="modal-header">' +
+                            '               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                            '               <h4 class="modal-title">Image Size</h4>' +
+                            '           </div>' +
+                            '           <div class="modal-body">' +
+                            '               <p> Icon image should be at least ' + config.minWidth + 'x' + config.minHeight + ' pixels </p>' +
+                            '           </div>' +
+                            '           <div class="modal-footer">' +
+                            '               <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>' +
+                            '           </div>' +
+                            '       </div>' +
+                            '   </div>' +
+                            '</div>';
+                        $(modalTemplate).modal();
+                        return;
+                    }
                     // get cropped image data
                     var blob = cropper.getCroppedCanvas().toDataURL();
                     // transform it to Blob object

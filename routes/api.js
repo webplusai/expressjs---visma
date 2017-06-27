@@ -134,6 +134,7 @@ router.post('/app/publish', function(req, res) {
 	var body = {
 		developerId: 1,
 		version: parseInt(req.body.version)
+
 	};
 
 	console.log(body);
@@ -151,7 +152,13 @@ router.post('/app/publish', function(req, res) {
 
 router.post('/app/delete', function(req, res) {
 
-	var post = https.request(helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version + '?developerId=1', 'DELETE'), function(response) {
+	var options;
+	if ( req.body.version ) {
+		options = helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version + '?developerId=1', 'DELETE')
+	} else {
+		options = helper.getOptions('/apps/' + req.body.appId + '?developerId=1', 'DELETE')
+	}
+	var post = https.request(options, function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
 			console.log('Response: ' + chunk);

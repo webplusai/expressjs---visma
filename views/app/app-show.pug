@@ -41,8 +41,12 @@ section.apps
 											i.fa.fa-rocket
 									a.btn.btn-see-through(data-toggle="tooltip", title="Preview" href="http://visma-market.openchannel.io/details/" + app.appId + "/" + app.version, target="_blank")
 										i.fa.fa-search
-									a.btn.btn-see-through(data-toggle="tooltip", title="Delete" onclick="showDeleteDialog('" + app.appId + "', '" + app.version + "')")
-										i.fa.fa-trash
+									if (app.status.value == 'approved' || app.status.value == 'suspended')
+										a.btn.btn-see-through(data-toggle="tooltip", title="Delete" onclick="showDeleteDialog('" + app.appId "')")
+											i.fa.fa-trash
+									else
+										a.btn.btn-see-through(data-toggle="tooltip", title="Delete" onclick="showDeleteDialog('" + app.appId + "', '" + app.version + "')")
+											i.fa.fa-trash
 								div(class=app.status.value + " card-status text-center")
 									case app.status.value
 										when 'approved'
@@ -136,7 +140,7 @@ script.
 		$(obj).find('.fa-spinner').removeClass('hidden');
 		$.post('/api/app/delete', {
 			developerId: 1,
-			version: 1,
+			version: version,
 			appId: appId
 		}, function(response) {
 			$(obj).prop('disabled', false);
