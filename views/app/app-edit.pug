@@ -20,7 +20,7 @@ section.breadcrumb
 section.form
 	div.container
 		div#plot
-		form.form(method="post", action="/api/app" novalidate)
+		form.form(method="post", action="/api/app/update" novalidate)
 			input.hidden(name="method", value="put")
 			input.hidden(name="appId", value=app.appId)
 			input.hidden(name="version", value=app.version)

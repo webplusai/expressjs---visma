@@ -19,7 +19,8 @@ section.breadcrumb
 
 section.form
 	div.container
-		form.form(method="post", action="/api/app" novalidate)
+		form.form(method="post", action="/api/app/create" novalidate)
+			input#publish(name="publish", value="false", type="hidden")
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Application Name
@@ -45,7 +46,9 @@ section.form
 					#[span.text-danger *]
 				div.col-md-6
 					div#upload-icon.dropzone
-						input#icon(name="icon", type="input", class="hidden", value="")
+				div.col-md-6.col-md-offset-3
+					input#icon(name="icon", type="input", class="hidden", value="", required, data-validation-required-message="Please upload icon")
+					p.help-block
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Images
@@ -119,36 +122,40 @@ script.
 
 		$(".categorizer").select2();
 
-		$("form").find("input,select,textarea").not("[type='submit']").jqBootstrapValidation({ });
+		$("form").find("input,select,textarea").not("[type='submit']").jqBootstrapValidation({ 
+			preventSubmit: true,
+			submitSuccess: function() {
+				if (bSubmit == false) {
+					var modal =
+							'<div id="modal_publish" class="modal fade" role="dialog">' +
+							'	<div class="modal-dialog">' + 
+							'		<div class="modal-content">' + 
+							'			<div class="modal-header">' +
+							'				<button class="close" data-dismiss="modal"> &times; </button>' +
+							'				<h4 class="modal-title"> Publish App </h4>' +
+							'			</div>' +
+							'			<div class="modal-body">' +
+							'				<p> Do you also want to submit this app to the marketplace right now? </p>' +
+							'			</div>' +
+							'			<div class="modal-footer">' +
+							'				<button class="btn btn-default" onclick="bSubmit=true; $(\'#publish\').val(\'false\'); $(\'form\').submit();"> Later </button>' +
+							'				<button class="btn btn-primary" onclick="bSubmit=true; $(\'#publish\').val(\'true\'); $(\'form\').submit();"> Yes </button>' +
+							'			</div>' +
+							'		</div>' +
+							'	</div>' +
+							'</div>';
 
-		$("form").submit(function(e) {
-			if (bSubmit == false) {
-				var modal =
-						'<div id="modal_publish" class="modal fade" role="dialog">' +
-						'	<div class="modal-dialog">' + 
-						'		<div class="modal-content">' + 
-						'			<div class="modal-header">' +
-						'				<button class="close" data-dismiss="modal"> &times; </button>' +
-						'				<h4 class="modal-title"> Publish App </h4>' +
-						'			</div>' +
-						'			<div class="modal-body">' +
-						'				<p> Do you also want to submit this app to the marketplace right now? </p>' +
-						'			</div>' +
-						'			<div class="modal-footer">' +
-						'				<button class="btn btn-default" data-dismiss="modal"> Later </button>' +
-						'				<button class="btn btn-primary" onclick="bSubmit=true; $(\'form\').submit();"> Yes </button>' +
-						'			</div>' +
-						'		</div>' +
-						'	</div>' +
-						'</div>';
-
-				$(modal).modal();
-				return false;
-			} else {
-				return true;
+					$(modal).modal();
+					return false;
+				} else {
+					return true;
+				}
 			}
 		});
 
+		$("form").submit(function(e){
+			return bSubmit;
+		});
 
 		$(".video-url").change(function() {
 			$(".video-preview iframe").remove();
