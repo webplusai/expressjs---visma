@@ -17,4 +17,4 @@ app.use('/api', api_routes);
 app.use('/public', express.static('public'));
 app.use('/uploads', express.static('uploads'));
 app.use('/config', express.static('config'));
-app.listen(3000);
+app.listen(process.env.PORT || 3000)

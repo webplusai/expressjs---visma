@@ -142,7 +142,10 @@ function initializeCropperDropzone( selector, config ) {
             });
 
             this.on('uploadprogress', function(file, progress) {
-                $(selector + ' .dz-upload:last').text('99%');
+                if ( progress == 100 )
+                    $(selector + ' .dz-upload:last').text('99%');
+                else
+                    $(selector + ' .dz-upload:last').text(progress + '%');
             });
         }
     }
