@@ -129,7 +129,6 @@ script.
 			version: 1,
 			appId: appId
 		}, function(response) {
-			toastr.success('Your app has been submitted and is pending approval');
 			location.reload();
 		});
 	}
@@ -142,7 +141,6 @@ script.
 			version: version,
 			appId: appId
 		}, function(response) {
-			toastr.success('App version deleted successfully');
 			location.reload();
 		});
 	}
@@ -171,18 +169,6 @@ script.
 		).data("plot");
 		
 		$("[data-toggle='tooltip']").tooltip();
-
-		toastr.options = {
-			'positionClass': 'toast-top-center'
-		}
-
-		var toast_type = '#{toast_type}';
-		console.log(toast_type);
-		if (toast_type == 'create') {
-			toastr.success('Your draft has been saved');
-		} else if (toast_type == 'update') {
-			toastr.success('Your changes have been saved');
-		}
 	});
 
 include ./../footer.pug

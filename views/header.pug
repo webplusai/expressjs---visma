@@ -27,6 +27,28 @@ html
 		script(src="/public/js/cropper-dropzone.js")
 		script(src="/public/js/tinymce/tinymce.min.js")
 		script(src="/public/js/toastr.min.js")
+
+		script.
+			$(document).ready(function() {
+				toastr.options = {
+					'positionClass': 'toast-top-center'
+				}
+
+				var toast_type = '#{toast_type}';
+				var toast_message = '#{toast_message}';
+				
+				if (toast_type == 'error') {
+					toastr.error(toast_message);
+				} else if (toast_type == 'create') {
+					toastr.success('Your draft has been saved');
+				} else if (toast_type == 'update') {
+					toastr.success('Your changes have been saved');
+				} else if (toast_type == 'delete') {
+					toastr.success('App version deleted successfully');
+				} else if (toast_type == 'publish') {
+					toastr.success('Your app has been submitted and is pending approval');
+				}
+			});
 	body
 		div.header
 			div.container

@@ -18,9 +18,11 @@ router.get('/app', function(req, res) {
 			var get = https.request(helper.getOptions('/stats/series/month/views?query=' + encodeURIComponent("{developerId: '" + config.DEVELOPER_ID + "'}"), 'GET'), function(response) {
 				response.setEncoding('utf8');
 				response.on('data', function(chunk) {
-					toast_type = req.session.toast;
-					req.session.toast = '';
-					res.render('app/app-show', {data: data, statistics: chunk, toast_type: toast_type });
+					toast_type = req.session.toast_type;
+					toast_message = req.session.toast_message;
+					req.session.toast_type = '';
+					req.session.toast_message = '';
+					res.render('app/app-show', {data: data, statistics: chunk, toast_type: toast_type, toast_message: toast_message });
 				})
 			});
 
@@ -32,7 +34,9 @@ router.get('/app', function(req, res) {
 });
 
 router.get('/app/create', function(req, res) {
-    res.render('app/app-create');
+	var toast_type = req.session.toast_type;
+	var toast_message = req.session.toast_message;
+    res.render('app/app-create', { toast_type: toast_type, toast_message: toast_message });
 });
 
 router.get('/app/edit/:id/:version', function(req, res) {
@@ -49,7 +53,11 @@ router.get('/app/edit/:id/:version', function(req, res) {
 			var get = https.request(helper.getOptions("/stats/series/month/views?query=" + encodeURIComponent("{appId: '" + app.appId + "', developerId: '" + config.DEVELOPER_ID + "'}"), 'GET'), function(response) {
 				response.setEncoding('utf8');
 				response.on('data', function(chunk) {
-					res.render('app/app-edit', {app: app, statistics: chunk});
+					var toast_type = req.session.toast_type;
+					var toast_message = req.session.toast_message;
+					req.session.toast_type = '';
+					req.session.toast_message = '';
+					res.render('app/app-edit', {app: app, statistics: chunk, toast_type: toast_type, toast_message: toast_message});
 				});
 			});
 

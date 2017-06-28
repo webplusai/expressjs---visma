@@ -17,7 +17,7 @@ router.post('/upload', function(req, res){
 
 		var formData = {
 			file: fs.createReadStream(file.path).on('data', function(chunk) {
-				console.log(chunk.length);
+				console.log(chunk.length) + ' bytes sent';
 			}),
 		};
 
@@ -58,6 +58,14 @@ router.post('/app/create', function(req, res) {
 	var post = https.request(helper.getOptions('/apps', 'POST'), function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function (chunk) {
+			var body = JSON.parse(chunk);
+			if (typeof body.code != 'undefined') {
+				req.session.toast_type = 'error';
+				req.session.toast_message = body.errors[0].message;
+				res.redirect('/app/create');
+				return;
+			}
+
 			if (req.body.publish == 'true') {
 				var app = JSON.parse(chunk);
 				var body = {
@@ -68,7 +76,14 @@ router.post('/app/create', function(req, res) {
 				var post = https.request(helper.getOptions('/apps/' + app.appId + '/publish', 'POST'), function(response) {
 					response.setEncoding('utf8');
 					response.on('data', function(chunk) {
-						req.session.toast = 'publish';
+						var body = JSON.parse(chunk);
+						if (typeof body.code != 'undefined') {
+							req.session.toast_type = 'error';
+							req.session.toast_message = 'There was an error publishing the app. Please try again';
+							res.redirect('/app/create');
+							return;
+						}
+						req.session.toast_type = 'publish';
 						res.redirect('/app');
 					});
 				});
@@ -76,7 +91,7 @@ router.post('/app/create', function(req, res) {
 				post.write(JSON.stringify(body));
 				post.end();
 			} else {
-				req.session.toast = 'create';
+				req.session.toast_type = 'create';
 				res.redirect('/app');
 			}
 		});
@@ -96,6 +111,13 @@ router.post('/app/update', function(req, res) {
 	var post = https.request(helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version, 'POST'), function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
+			var body = JSON.parse(chunk);
+			if (typeof body.code != 'undefined') {
+				req.session.toast_type = 'error';
+				req.session.toast_message = body.errors[0].message;
+				res.redirect('/app/edit/' + req.body.appId + '/' + req.body.version);
+				return;
+			}
 			if (req.body.publish == 'true') {
 				var app = JSON.parse(chunk);
 				var body = {
@@ -106,7 +128,14 @@ router.post('/app/update', function(req, res) {
 				var post = https.request(helper.getOptions('/apps/' + app.appId + '/publish', 'POST'), function(response) {
 					response.setEncoding('utf8');
 					response.on('data', function(chunk) {
-						req.session.toast = 'publish';
+						var body = JSON.parse(chunk);
+						if (typeof body.code != 'undefined') {
+							req.session.toast_type = 'error';
+							req.session.toast_message = 'There was an error publishing the app. Please try again';
+							res.redirect('/app/edit/' + req.body.appId + '/' + req.body.version);
+							return;
+						}
+						req.session.toast_type = 'publish';
 						res.redirect('/app');
 					});
 				});
@@ -114,7 +143,7 @@ router.post('/app/update', function(req, res) {
 				post.write(JSON.stringify(body));
 				post.end();
 			} else {
-				req.session.toast = 'update';
+				req.session.toast_type = 'update';
 				res.redirect('/app');
 			}
 		});
@@ -133,6 +162,15 @@ router.post('/app/publish', function(req, res) {
 	var post = https.request(helper.getOptions('/apps/' + req.body.appId + '/publish', 'POST'), function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
+			console.log('Response: ' + chunk);
+			var body = JSON.parse(chunk);
+			if (typeof body.code != 'undefined') {
+				req.session.toast_type = 'error';
+				req.session.toast_message = 'There was an error publishing the app. Please try again';
+				res.send('error');
+				return;
+			}
+			req.session.toast_type = 'publish';
 			res.send('success');
 		});
 	});
@@ -152,6 +190,7 @@ router.post('/app/delete', function(req, res) {
 	var post = https.request(options, function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
+			req.session.toast_type = 'delete';
 			res.send('success');
 		});
 	});
