@@ -146,10 +146,13 @@ router.post('/app/publish', function(req, res) {
 router.post('/app/delete', function(req, res) {
 
 	var options;
-	if ( req.body.version ) {
-		options = helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version + '?developerId=' + config.DEVELOPER_ID, 'DELETE')
+	console.log(typeof req.body.version);
+	if ( req.body.version != 'undefined' ) {
+		console.log("A");
+		options = helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version + '?developerId=' + config.DEVELOPER_ID, 'DELETE');
 	} else {
-		options = helper.getOptions('/apps/' + req.body.appId + '?developerId=' + config.DEVELOPER_ID, 'DELETE')
+		console.log("B");
+		options = helper.getOptions('/apps/' + req.body.appId + '?developerId=' + config.DEVELOPER_ID, 'DELETE');
 	}
 	var post = https.request(options, function(response) {
 		response.setEncoding('utf8');
