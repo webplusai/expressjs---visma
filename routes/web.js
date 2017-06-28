@@ -18,6 +18,7 @@ router.get('/app', function(req, res) {
 			var get = https.request(helper.getOptions('/stats/series/month/views?query=' + encodeURIComponent("{developerId: '" + config.DEVELOPER_ID + "'}"), 'GET'), function(response) {
 				response.setEncoding('utf8');
 				response.on('data', function(chunk) {
+					//console.log(req.session.toast);
 					res.render('app/app-show', {data: data, statistics: chunk });
 				})
 			});

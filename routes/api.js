@@ -68,6 +68,7 @@ router.post('/app/create', function(req, res) {
 				var post = https.request(helper.getOptions('/apps/' + app.appId + '/publish', 'POST'), function(response) {
 					response.setEncoding('utf8');
 					response.on('data', function(chunk) {
+						//req.session.toast = "publish";
 						res.redirect('/app');
 					});
 				});
@@ -75,6 +76,7 @@ router.post('/app/create', function(req, res) {
 				post.write(JSON.stringify(body));
 				post.end();
 			} else {
+				//req.session.toast = "create";
 				res.redirect('/app');
 			}
 		});
@@ -104,6 +106,7 @@ router.post('/app/update', function(req, res) {
 				var post = https.request(helper.getOptions('/apps/' + app.appId + '/publish', 'POST'), function(response) {
 					response.setEncoding('utf8');
 					response.on('data', function(chunk) {
+						//req.session.toast = "publish";
 						res.redirect('/app');
 					});
 				});
@@ -111,9 +114,9 @@ router.post('/app/update', function(req, res) {
 				post.write(JSON.stringify(body));
 				post.end();
 			} else {
+				//req.session.toast = "update";
 				res.redirect('/app');
 			}
-
 		});
 	});
 
@@ -130,7 +133,9 @@ router.post('/app/publish', function(req, res) {
 	var post = https.request(helper.getOptions('/apps/' + req.body.appId + '/publish', 'POST'), function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
-			res.send('success');
+			//res.send('success');
+			//req.session.toast = "publish";
+			res.redirect('/app');
 		});
 	});
 
@@ -149,7 +154,9 @@ router.post('/app/delete', function(req, res) {
 	var post = https.request(options, function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
-			res.send('success');
+			//res.send('success');
+			//req.session.toast = "delete";
+			res.redirect('/app');
 		});
 	});
 
