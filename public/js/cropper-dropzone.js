@@ -62,6 +62,7 @@ function initializeCropperDropzone( selector, config ) {
                 }
 
                 $(selector + " .dz-upload:last").text("Complete");
+                $(selector + " .dz-upload:last").addClass("completed");
             });
 
             this.on('drop', function (event) {

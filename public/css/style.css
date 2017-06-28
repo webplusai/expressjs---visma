@@ -178,12 +178,16 @@
 
 .dz-upload { 
     display: block; 
-    background-color: #5cb85c; 
+    background-color: #428bca;
     color: #fff;
     border-radius: 4px;
     height: 20px;
     line-height: 20px;
     width: 0%;
+}
+
+.dz-upload.completed {
+	background-color: #5cb85c;
 }
 
 .error-panel {

@@ -94,9 +94,6 @@ router.post('/app/update', function(req, res) {
 	var post = https.request(helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version, 'POST'), function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
-
-			console.log("Updated");
-			console.log(req.body.publish);
 			if (req.body.publish == 'true') {
 				var app = JSON.parse(chunk);
 				var body = {
