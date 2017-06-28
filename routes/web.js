@@ -18,7 +18,6 @@ router.get('/app', function(req, res) {
 			var get = https.request(helper.getOptions('/stats/series/month/views?query=' + encodeURIComponent("{developerId: '" + config.DEVELOPER_ID + "'}"), 'GET'), function(response) {
 				response.setEncoding('utf8');
 				response.on('data', function(chunk) {
-					console.log('Response: ' + chunk);
 					res.render('app/app-show', {data: data, statistics: chunk });
 				})
 			});
@@ -40,17 +39,14 @@ router.get('/app/edit/:id', function(req, res) {
 		response.on('data', function(chunk) {
 			var app = JSON.parse(chunk);
 
-			console.log('Response: ' + chunk);
 			if (app.customData.files)
 				app.customData.fileList = app.customData.files.split(',').filter(function(el) {return el.length != 0});
 			if (app.customData.images)
 				app.customData.imageList = app.customData.images.split(',').filter(function(el) {return el.length != 0});
 
-			console.log(encodeURIComponent("{appId: " + app.appId + "}"));
 			var get = https.request(helper.getOptions("/stats/series/month/views?query=" + encodeURIComponent("{appId: '" + app.appId + "', developerId: '" + config.DEVELOPER_ID + "'}"), 'GET'), function(response) {
 				response.setEncoding('utf8');
 				response.on('data', function(chunk) {
-					console.log('Response: ' + chunk);
 					res.render('app/app-edit', {app: app, statistics: chunk});
 				});
 			});

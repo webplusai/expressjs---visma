@@ -14,8 +14,6 @@ router.post('/upload', function(req, res){
 	var form = new formidable.IncomingForm();
 
 	form.on('file', function(field, file) {
-		console.log("File Detected");
-		console.log(file.path + '/' +  file.name);
 
 		var formData = {
 			file: fs.createReadStream(file.path).on('data', function(chunk) {
@@ -67,11 +65,9 @@ router.post('/app/create', function(req, res) {
 					version: parseInt(app.version)
 				};
 
-				console.log(body);
 				var post = https.request(helper.getOptions('/apps/' + app.appId + '/publish', 'POST'), function(response) {
 					response.setEncoding('utf8');
 					response.on('data', function(chunk) {
-						console.log('Response: ' + chunk);
 						res.redirect('/app');
 					});
 				});
@@ -79,7 +75,6 @@ router.post('/app/create', function(req, res) {
 				post.write(JSON.stringify(body));
 				post.end();
 			} else {
-				console.log('Response: ' + chunk);
 				res.redirect('/app');
 			}
 		});
@@ -100,6 +95,8 @@ router.post('/app/update', function(req, res) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
 
+			console.log("Updated");
+			console.log(req.body.publish);
 			if (req.body.publish == 'true') {
 				var app = JSON.parse(chunk);
 				var body = {
@@ -107,11 +104,9 @@ router.post('/app/update', function(req, res) {
 					version: parseInt(app.version)
 				};
 
-				console.log(body);
 				var post = https.request(helper.getOptions('/apps/' + app.appId + '/publish', 'POST'), function(response) {
 					response.setEncoding('utf8');
 					response.on('data', function(chunk) {
-						console.log('Response: ' + chunk);
 						res.redirect('/app');
 					});
 				});
@@ -119,7 +114,6 @@ router.post('/app/update', function(req, res) {
 				post.write(JSON.stringify(body));
 				post.end();
 			} else {
-				console.log('Response: ' + chunk);
 				res.redirect('/app');
 			}
 
@@ -134,14 +128,11 @@ router.post('/app/publish', function(req, res) {
 	var body = {
 		developerId: config.DEVELOPER_ID,
 		version: parseInt(req.body.version)
-
 	};
 
-	console.log(body);
 	var post = https.request(helper.getOptions('/apps/' + req.body.appId + '/publish', 'POST'), function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
-			console.log('Response: ' + chunk);
 			res.send('success');
 		});
 	});
@@ -161,7 +152,6 @@ router.post('/app/delete', function(req, res) {
 	var post = https.request(options, function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
-			console.log('Response: ' + chunk);
 			res.send('success');
 		});
 	});

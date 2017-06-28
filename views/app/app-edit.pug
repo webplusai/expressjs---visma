@@ -24,6 +24,7 @@ section.form
 			input.hidden(name="method", value="put")
 			input.hidden(name="appId", value=app.appId)
 			input.hidden(name="version", value=app.version)
+			input#publish(name="publish", value="false", type="hidden")
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Application Name
@@ -181,30 +182,35 @@ script.
 		$("form").find("input,select,textarea").not("[type='submit']").jqBootstrapValidation({ 
 			preventSubmit: true,
 			submitSuccess: function() {
-				if (bSubmit == false) {
-					var modal =
-							'<div id="modal_publish" class="modal fade" role="dialog">' +
-							'	<div class="modal-dialog">' + 
-							'		<div class="modal-content">' + 
-							'			<div class="modal-header">' +
-							'				<button class="close" data-dismiss="modal"> &times; </button>' +
-							'				<h4 class="modal-title"> Publish App </h4>' +
-							'			</div>' +
-							'			<div class="modal-body">' +
-							'				<p> Do you also want to submit this app to the marketplace right now? </p>' +
-							'			</div>' +
-							'			<div class="modal-footer">' +
-							'				<button class="btn btn-default" onclick="editApp(this, \'false\');"> <i class="fa fa-spinner hidden"> </i> Later </button>' +
-							'				<button class="btn btn-primary" onclick="editApp(this, \'true\');"> <i class="fa fa-spinner hidden"> </i> Yes </button>' +
-							'			</div>' +
-							'		</div>' +
-							'	</div>' +
-							'</div>';
+				var status = '#{app.status.value}';
+				if (status == 'inDevelopment') {
+					if (bSubmit == false) {
+						var modal =
+								'<div id="modal_publish" class="modal fade" role="dialog">' +
+								'	<div class="modal-dialog">' + 
+								'		<div class="modal-content">' + 
+								'			<div class="modal-header">' +
+								'				<button class="close" data-dismiss="modal"> &times; </button>' +
+								'				<h4 class="modal-title"> Publish App </h4>' +
+								'			</div>' +
+								'			<div class="modal-body">' +
+								'				<p> Do you also want to submit this app to the marketplace right now? </p>' +
+								'			</div>' +
+								'			<div class="modal-footer">' +
+								'				<button class="btn btn-default" onclick="editApp(this, \'false\');"> <i class="fa fa-spinner hidden"> </i> Later </button>' +
+								'				<button class="btn btn-primary" onclick="editApp(this, \'true\');"> <i class="fa fa-spinner hidden"> </i> Yes </button>' +
+								'			</div>' +
+								'		</div>' +
+								'	</div>' +
+								'</div>';
 
-					$(modal).modal();
-					return false;
+						$(modal).modal();
+						return false;
+					} else {
+						return true;
+					}
 				} else {
-					return true;
+					bSubmit = true;
 				}
 			}
 		});
