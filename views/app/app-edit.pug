@@ -58,7 +58,7 @@ section.form
 								div.dz-image
 									img(data-dz-thumbnail, src=app.customData.icon)
 								div.dz-progress
-									span.dz-upload(data-dz-uploadprogress, style="width: 100%;").
+									span.dz-upload.completed(data-dz-uploadprogress, style="width: 100%;").
 										Complete
 								a.dz-remove(href="javascript:void(0);" data-dz-remove onclick="removeFile(this, '#icon', '" + app.customData.icon + "')")
 									i.fa.fa-trash
@@ -74,7 +74,7 @@ section.form
 									div.dz-image
 										img(data-dz-thumbnail, src=image)
 									div.dz-progress
-										span.dz-upload(data-dz-uploadprogress, style="width: 100%;").
+										span.dz-upload.completed(data-dz-uploadprogress, style="width: 100%;").
 											Complete
 									a.dz-remove(href="javascript:void(0);" data-dz-remove onclick="removeFile(this, '#images', '" + image + "')")
 										i.fa.fa-trash
@@ -90,7 +90,7 @@ section.form
 									div.dz-image
 										i.fa.fa-file
 									div.dz-progress
-										span.dz-upload(data-dz-uploadprogress, style="width: 100%;").
+										span.dz-upload.completed(data-dz-uploadprogress, style="width: 100%;").
 											Complete
 									a.dz-remove(href="javascript:void(0);" data-dz-remove onclick="removeFile(this, '#files', '" + file + "')")
 										i.fa.fa-trash
@@ -183,6 +183,7 @@ script.
 			preventSubmit: true,
 			submitSuccess: function() {
 				var status = '#{app.status.value}';
+				console.log(status);
 				if (status == 'inDevelopment') {
 					if (bSubmit == false) {
 						var modal =

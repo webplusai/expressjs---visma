@@ -34,7 +34,7 @@ section.apps
 						div.col-md-6
 							div.card
 								div.card-overlay.text-center
-									a.btn.btn-see-through(data-toggle="tooltip", title="Edit" href="/app/edit/" + app.appId)
+									a.btn.btn-see-through(data-toggle="tooltip", title="Edit" href="/app/edit/" + app.appId + "/" + app.version)
 										i.fa.fa-pencil
 									if (app.status.value == 'inDevelopment')
 										a.btn.btn-see-through(data-toggle="tooltip", title="Publish" onclick="showPublishDialog('" + app.appId + "', '" + app.version + "')")
@@ -129,8 +129,6 @@ script.
 			version: 1,
 			appId: appId
 		}, function(response) {
-			$(obj).prop('disabled', false);
-			$(obj).find('.fa-spinner').addClass('hidden');
 			location.reload();
 		});
 	}
@@ -143,8 +141,6 @@ script.
 			version: version,
 			appId: appId
 		}, function(response) {
-			$(obj).prop('disabled', false);
-			$(obj).find('.fa-spinner').addClass('hidden');
 			location.reload();
 		});
 	}

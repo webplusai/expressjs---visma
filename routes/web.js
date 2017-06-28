@@ -15,6 +15,7 @@ router.get('/app', function(req, res) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
 			var data = JSON.parse(chunk);
+			console.log('Response: ' + chunk);
 			var get = https.request(helper.getOptions('/stats/series/month/views?query=' + encodeURIComponent("{developerId: '" + config.DEVELOPER_ID + "'}"), 'GET'), function(response) {
 				response.setEncoding('utf8');
 				response.on('data', function(chunk) {
@@ -34,8 +35,8 @@ router.get('/app/create', function(req, res) {
     res.render('app/app-create');
 });
 
-router.get('/app/edit/:id', function(req, res) {
-	var request = https.request(helper.getOptions('/apps/' + req.params.id + '/versions/1' + '?developerId=' + config.DEVELOPER_ID, 'GET'), function(response) {
+router.get('/app/edit/:id/:version', function(req, res) {
+	var request = https.request(helper.getOptions('/apps/' + req.params.id + '/versions/' + req.params.version + '?developerId=' + config.DEVELOPER_ID, 'GET'), function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
 			var app = JSON.parse(chunk);
