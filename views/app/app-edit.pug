@@ -66,31 +66,33 @@ section.form
 					Images
 				div.col-md-6
 					div#upload-images.dropzone
-						input#images(name="images", type="input", class="hidden", value=app.customData.images)
-						each image in app.customData.imageList
-							div.dz-preview.dz-processing.dz-image-preview.dz-success.dz-complete
-								div.dz-image
-									img(data-dz-thumbnail, src=image)
-								div.dz-progress
-									span.dz-upload(data-dz-uploadprogress, style="width: 100%;").
-										Complete
-								a.dz-remove(href="javascript:void(0);" data-dz-remove onclick="removeFile(this, '#images', '" + image + "')")
-									i.fa.fa-trash
+						input#images(name="images", type="input", class="hidden")
+						if app.customData.imageList
+							each image in app.customData.imageList
+								div.dz-preview.dz-processing.dz-image-preview.dz-success.dz-complete
+									div.dz-image
+										img(data-dz-thumbnail, src=image)
+									div.dz-progress
+										span.dz-upload(data-dz-uploadprogress, style="width: 100%;").
+											Complete
+									a.dz-remove(href="javascript:void(0);" data-dz-remove onclick="removeFile(this, '#images', '" + image + "')")
+										i.fa.fa-trash
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Files
 				div.col-md-6
 					div#upload-files.dropzone
-						input#files(name="files", type="input", class="hidden", value=app.customData.files)
-						each file in app.customData.fileList
-							div.dz-preview.dz-processing.dz-image-preview.dz-success.dz-complete
-								div.dz-image
-									i.fa.fa-file
-								div.dz-progress
-									span.dz-upload(data-dz-uploadprogress, style="width: 100%;").
-										Complete
-								a.dz-remove(href="javascript:void(0);" data-dz-remove onclick="removeFile(this, '#files', '" + file + "')")
-									i.fa.fa-trash
+						input#files(name="files", type="input", class="hidden")
+						if app.customData.fileList
+							each file in app.customData.fileList
+								div.dz-preview.dz-processing.dz-image-preview.dz-success.dz-complete
+									div.dz-image
+										i.fa.fa-file
+									div.dz-progress
+										span.dz-upload(data-dz-uploadprogress, style="width: 100%;").
+											Complete
+									a.dz-remove(href="javascript:void(0);" data-dz-remove onclick="removeFile(this, '#files', '" + file + "')")
+										i.fa.fa-trash
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Category
@@ -125,13 +127,6 @@ section.form
 				div.col-md-6
 					input.form-control.video-url(name="video_url", value=app.customData.video_url)
 					div.video-preview
-			div.form-group.row.control-group
-				div.col-md-3
-				div.col-md-6.controls
-					input(type="checkbox", required, data-validation-required-message="Please check this box if you want to proceed.")
-					label. 
-						 I agree to the terms and conditions.
-						#[span.text-danger *]
 			div.form-group.row
 				div.col-md-6.col-md-offset-3
 					button.btn.btn-primary.pull-right(type="submit", onclick="bSubmit=false;").
@@ -218,20 +213,34 @@ script.
 			return bSubmit;
 		});
 
-		$("#plot").plot(
+		var xaxis = [];
+		var month = (new Date()).getMonth();
+		for (i = 0; i < 13; i++) {
+			xaxis.push([ i, monthNames[month++ % 12] ]);
+		}
+
+		var statistics = JSON.parse('#{statistics}');
+		for(i = 0; i < statistics.length; i++) {
+			statistics[i][0] = i;
+		}
+
+		flotConfig.xaxis.ticks = xaxis;
+		var plot = $("#plot").plot(
 			[
 				{ 
-					data: [ [0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0], [9, 0], [10, 0], [11, 0] ]
+					data: statistics
 				},
 			],
 			flotConfig
 		).data("plot");
 
-
 		$(".video-url").change(function() {
 			$(".video-preview iframe").remove();
 			$(".video-preview").append(getEmbedVideoCode( $(".video-url").val(), 390, 220 ));
 		});
+
+		if ($(".video-url").val())
+			$(".video-preview").append(getEmbedVideoCode( $(".video-url").val(), 390, 220 ));
 	});
 
 include ./../footer.pug

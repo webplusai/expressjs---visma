@@ -150,14 +150,28 @@ script.
 	}
 
 	$(document).ready(function() {
-		$("#plot").plot(
+
+		var xaxis = [];
+		var month = (new Date()).getMonth();
+		for (i = 0; i < 13; i++) {
+			xaxis.push([ i, monthNames[month++ % 12] ]);
+		}
+
+		var statistics = JSON.parse('#{statistics}');
+		for(i = 0; i < statistics.length; i++) {
+			statistics[i][0] = i;
+		}
+
+		flotConfig.xaxis.ticks = xaxis;
+		var plot = $("#plot").plot(
 			[
 				{ 
-					data: [ [0, 0], [1, 1], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0], [9, 0], [10, 0], [11, 0] ]
+					data: statistics
 				},
 			],
 			flotConfig
 		).data("plot");
+		
 		$("[data-toggle='tooltip']").tooltip();
 	});
 

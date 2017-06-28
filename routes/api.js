@@ -52,7 +52,7 @@ router.post('/upload', function(req, res){
 
 router.post('/app/create', function(req, res) {
 	var body = {
-		developerId: 1,
+		developerId: config.DEVELOPER_ID,
 		name: req.body.name,
 		customData: req.body
 	}
@@ -63,7 +63,7 @@ router.post('/app/create', function(req, res) {
 			if (req.body.publish == 'true') {
 				var app = JSON.parse(chunk);
 				var body = {
-					developerId: 1,
+					developerId: config.DEVELOPER_ID,
 					version: parseInt(app.version)
 				};
 
@@ -91,7 +91,7 @@ router.post('/app/create', function(req, res) {
 
 router.post('/app/update', function(req, res) {
 	var body = {
-		developerId: 1,
+		developerId: config.DEVELOPER_ID,
 		name: req.body.name,
 		customData: req.body
 	}
@@ -103,7 +103,7 @@ router.post('/app/update', function(req, res) {
 			if (req.body.publish == 'true') {
 				var app = JSON.parse(chunk);
 				var body = {
-					developerId: 1,
+					developerId: config.DEVELOPER_ID,
 					version: parseInt(app.version)
 				};
 
@@ -132,7 +132,7 @@ router.post('/app/update', function(req, res) {
 
 router.post('/app/publish', function(req, res) {
 	var body = {
-		developerId: 1,
+		developerId: config.DEVELOPER_ID,
 		version: parseInt(req.body.version)
 
 	};
@@ -154,9 +154,9 @@ router.post('/app/delete', function(req, res) {
 
 	var options;
 	if ( req.body.version ) {
-		options = helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version + '?developerId=1', 'DELETE')
+		options = helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version + '?developerId=' + config.DEVELOPER_ID, 'DELETE')
 	} else {
-		options = helper.getOptions('/apps/' + req.body.appId + '?developerId=1', 'DELETE')
+		options = helper.getOptions('/apps/' + req.body.appId + '?developerId=' + config.DEVELOPER_ID, 'DELETE')
 	}
 	var post = https.request(options, function(response) {
 		response.setEncoding('utf8');
