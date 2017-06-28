@@ -15,12 +15,12 @@ router.get('/app', function(req, res) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
 			var data = JSON.parse(chunk);
-			console.log('Response: ' + chunk);
 			var get = https.request(helper.getOptions('/stats/series/month/views?query=' + encodeURIComponent("{developerId: '" + config.DEVELOPER_ID + "'}"), 'GET'), function(response) {
 				response.setEncoding('utf8');
 				response.on('data', function(chunk) {
-					//console.log(req.session.toast);
-					res.render('app/app-show', {data: data, statistics: chunk });
+					toast_type = req.session.toast;
+					req.session.toast = '';
+					res.render('app/app-show', {data: data, statistics: chunk, toast_type: toast_type });
 				})
 			});
 
