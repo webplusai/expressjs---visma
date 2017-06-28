@@ -80,7 +80,7 @@ router.post('/app/create', function(req, res) {
 						if (typeof body.code != 'undefined') {
 							req.session.toast_type = 'error';
 							req.session.toast_message = 'There was an error publishing the app. Please try again';
-							res.redirect('/app/create');
+							res.redirect('/app');
 							return;
 						}
 						req.session.toast_type = 'publish';
@@ -129,10 +129,11 @@ router.post('/app/update', function(req, res) {
 					response.setEncoding('utf8');
 					response.on('data', function(chunk) {
 						var body = JSON.parse(chunk);
+						console.log('Response: ' + chunk);
 						if (typeof body.code != 'undefined') {
 							req.session.toast_type = 'error';
 							req.session.toast_message = 'There was an error publishing the app. Please try again';
-							res.redirect('/app/edit/' + req.body.appId + '/' + req.body.version);
+							res.redirect('/app');
 							return;
 						}
 						req.session.toast_type = 'publish';

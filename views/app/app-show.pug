@@ -107,7 +107,7 @@ script.
 		'				<h4 class="modal-title"> Delete Version? </h4>' +
 		'			</div>' +
 		'			<div class="modal-body">' +
-		'				<p> Are you sure that you want to delete this Draft version of your app? </p>' +
+		'				<p> Are you sure that you want to delete this app? </p>' +
 		'			</div>' +
 		'			<div class="modal-footer">' +
 		'				<button class="btn btn-default" data-dismiss="modal"> Cancel </button>' +
@@ -126,7 +126,7 @@ script.
 		console.log("Publish clicked");
 		$.post('/api/app/publish', {
 			developerId: 1,
-			version: 1,
+			version: version,
 			appId: appId
 		}, function(response) {
 			location.reload();
