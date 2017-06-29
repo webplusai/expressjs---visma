@@ -204,7 +204,7 @@ script.
 		$(obj).find('.fa-spinner').removeClass('hidden');
 		console.log("Publish clicked");
 		$.post('/api/app/publish', {
-			developerId: 12,
+			developerId: 1,
 			version: version,
 			appId: appId
 		}, function(response) {
@@ -216,7 +216,7 @@ script.
 		$(obj).prop('disabled', true);
 		$(obj).find('.fa-spinner').removeClass('hidden');
 		$.post('/api/app/delete', {
-			developerId: 12,
+			developerId: 1,
 			version: version,
 			appId: appId
 		}, function(response) {
@@ -228,7 +228,7 @@ script.
 		$(obj).prop('disabled', true);
 		$(obj).find('.fa-spinner').removeClass('hidden');
 		$.post('/api/app/status', {
-			developerId: 12,
+			developerId: 1,
 			appId: appId,
 			status: status
 		}, function(response) {

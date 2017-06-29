@@ -146,7 +146,7 @@ function initializeCropperDropzone( selector, config ) {
                 if ( progress == 100 )
                     $(selector + ' .dz-upload:last').text('99%');
                 else
-                    $(selector + ' .dz-upload:last').text(progress.toFixed(2) + '%');
+                    $(selector + ' .dz-upload:last').text(parseInt(progress) + '%');
             });
         }
     }

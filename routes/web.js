@@ -11,10 +11,16 @@ router.get('/', function(req, res) {
 
 router.get('/app', function(req, res) {
 
-	var request = https.request(helper.getOptions('/apps/versions?developerId=' + config.DEVELOPER_ID, 'GET'), function(response) {
+	var request = https.request(helper.getOptions('/apps/versions?developerId=' + config.DEVELOPER_ID + "&sort=" + encodeURIComponent("{appId: 1, version: 1}"), 'GET'), function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
 			var data = JSON.parse(chunk);
+			for (i = 0; i < data.list.length - 1; i++) {
+				if (data.list[i].appId == data.list[i + 1].appId && data.list[i].status.value == 'approved' && data.list[i + 1].status.value == 'approved') {
+					data.list.splice(i, 1);
+					i --;
+				}
+			}
 			console.log('Response: ' + chunk);
 			var get = https.request(helper.getOptions('/stats/series/month/views?query=' + encodeURIComponent("{developerId: '" + config.DEVELOPER_ID + "'}"), 'GET'), function(response) {
 				response.setEncoding('utf8');
