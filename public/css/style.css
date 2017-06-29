@@ -36,7 +36,7 @@
 
 .card {
 	position: relative;
-	height: 315px;
+	min-height: 315px;
 	margin-bottom: 30px;
 	box-shadow: 2px 2px 6px #d8d8d8;
 }
@@ -57,8 +57,13 @@
 	margin-top: 30px;
 }
 
+.card-image {
+	text-align: center;
+}
+
 .card-image img {
 	width: 100%;
+	max-width: 150px;
 	margin: 40px 0px;
 }
 
@@ -67,8 +72,7 @@
 	background-color: rgba(77, 92, 116, 0.70);
 	border-radius: 4px;
 	width: 100%;
-	height: 315px;
-	line-height: 315px;
+	min-height: 100%;
 	z-index: 1;
 	opacity: 0;
 }
@@ -77,6 +81,16 @@
 	margin: 5px;
 	color: #fff;
 	border-width: 2px;
+}
+
+.card-overlay-panel {
+	position: absolute;
+	height: 63px;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    margin: auto;
 }
 
 .card-overlay i {
@@ -121,6 +135,10 @@
 .card-status.rejected{
 	background-color: #a94442;
 	color: #fff;
+}
+
+.card-summary {
+	min-height: 160px;
 }
 
 .card-title {
