@@ -300,6 +300,10 @@ img {
 	padding: 20px;
 }
 
+.select2 {
+	max-width: 100% !important;
+}
+
 .site-logo {
 	max-height: 38px;
 	position: absolute;
