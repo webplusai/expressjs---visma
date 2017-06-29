@@ -98,7 +98,14 @@ section.form
 script(src="/public/js/cropper-dropzone.js")
 script.
 	Dropzone.autoDiscover = false;
-	tinymce.init({ selector:'#description' });
+	tinymce.init(
+		{ 
+			selector:'#description',
+			plugins: "lists link",
+			menubar: false,
+			toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link"
+		}
+	);
 	var bSubmit = false;
 
 	function createApp(obj, publish) {

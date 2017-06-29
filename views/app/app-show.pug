@@ -127,8 +127,8 @@ script.
 				'	<div class="modal-body">';
 
 		if (status == 'suspend')
-			modal += '	<p> Are you sure that you want to delete this app? </p>' +
-					'	<p><strong>Warning:</strong> This will completely delete all versions of this app including drafts and pending versions.</p>';
+			modal += '	<p> Are you sure that you want to suspend this app in the marketplace? </p>' +
+					'	<p><strong>Warning:</strong> This app listing will be hidden from users on the marketplace.</p>';
 		else
 			modal += '	<p> Are you sure that you want to resume offering this app in the marketplace? </p>';
 
@@ -204,7 +204,6 @@ script.
 		$(obj).find('.fa-spinner').removeClass('hidden');
 		console.log("Publish clicked");
 		$.post('/api/app/publish', {
-			developerId: 1,
 			version: version,
 			appId: appId
 		}, function(response) {
@@ -216,7 +215,6 @@ script.
 		$(obj).prop('disabled', true);
 		$(obj).find('.fa-spinner').removeClass('hidden');
 		$.post('/api/app/delete', {
-			developerId: 1,
 			version: version,
 			appId: appId
 		}, function(response) {
@@ -228,7 +226,6 @@ script.
 		$(obj).prop('disabled', true);
 		$(obj).find('.fa-spinner').removeClass('hidden');
 		$.post('/api/app/status', {
-			developerId: 1,
 			appId: appId,
 			status: status
 		}, function(response) {

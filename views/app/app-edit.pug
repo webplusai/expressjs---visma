@@ -136,7 +136,14 @@ section.form
 script(src="/public/js/cropper-dropzone.js")
 script.
 	Dropzone.autoDiscover = false;
-	tinymce.init({ selector:'#description' });
+	tinymce.init(
+		{ 
+			selector:'#description',
+			plugins: "lists link",
+			menubar: false,
+			toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link"
+		}
+	);
 	var bSubmit = false;
 
 	function editApp(obj, publish) {
@@ -185,26 +192,25 @@ script.
 				var status = '#{app.status.value}';
 				console.log(status);
 				if (status != 'pending') {
-				//if (status == 'inDevelopment' || status == 'approved') {
 					if (bSubmit == false) {
 						var modal =
-								'<div id="modal_publish" class="modal fade" role="dialog">' +
-								'	<div class="modal-dialog">' + 
-								'		<div class="modal-content">' + 
-								'			<div class="modal-header">' +
-								'				<button class="close" data-dismiss="modal"> &times; </button>' +
-								'				<h4 class="modal-title"> Publish App </h4>' +
-								'			</div>' +
-								'			<div class="modal-body">' +
-								'				<p> Do you also want to submit this app to the marketplace right now? </p>' +
-								'			</div>' +
-								'			<div class="modal-footer">' +
-								'				<button class="btn btn-default" onclick="editApp(this, \'false\');"> <i class="fa fa-spinner hidden"> </i> Later </button>' +
-								'				<button class="btn btn-primary" onclick="editApp(this, \'true\');"> <i class="fa fa-spinner hidden"> </i> Yes </button>' +
-								'			</div>' +
-								'		</div>' +
-								'	</div>' +
-								'</div>';
+							'<div id="modal_publish" class="modal fade" role="dialog">' +
+							'	<div class="modal-dialog">' + 
+							'		<div class="modal-content">' + 
+							'			<div class="modal-header">' +
+							'				<button class="close" data-dismiss="modal"> &times; </button>' +
+							'				<h4 class="modal-title"> Publish App </h4>' +
+							'			</div>' +
+							'			<div class="modal-body">' +
+							'				<p> Do you also want to submit this app to the marketplace right now? </p>' +
+							'			</div>' +
+							'			<div class="modal-footer">' +
+							'				<button class="btn btn-default" onclick="editApp(this, \'false\');"> <i class="fa fa-spinner hidden"> </i> Later </button>' +
+							'				<button class="btn btn-primary" onclick="editApp(this, \'true\');"> <i class="fa fa-spinner hidden"> </i> Yes </button>' +
+							'			</div>' +
+							'		</div>' +
+							'	</div>' +
+							'</div>';
 
 						$(modal).modal();
 						return false;

@@ -25,7 +25,10 @@ function initializeCropperDropzone( selector, config ) {
             this.on('success', function (file, response) {
 
                 $(selector + " .upload-btn .fa-spinner").addClass("hidden");
-                $(selector + " .upload-btn span").text("Select an Image");
+                if (config.bFile)
+                    $(selector + " .upload-btn span").text("Select a File");
+                else
+                    $(selector + " .upload-btn span").text("Select an Image");
                 $(selector + " .upload-btn").prop("disabled", false);
 
                 var $button = $('<a href="#" class="js-open-cropper-modal hidden" data-file-name="' + response + '">Crop & Upload</a>');
@@ -153,7 +156,10 @@ function initializeCropperDropzone( selector, config ) {
 
     var myDropzone = new Dropzone(selector, options);
 
-    $(selector + ' .dz-default').prepend("<button type='button' class='btn btn-default upload-btn'> <i class='fa fa-spinner hidden'> </i> <span> Select an Image </span> </button>");
+    if (config.bFile) 
+        $(selector + ' .dz-default').prepend("<button type='button' class='btn btn-default upload-btn'> <i class='fa fa-spinner hidden'> </i> <span> Select a File </span> </button>");
+    else
+        $(selector + ' .dz-default').prepend("<button type='button' class='btn btn-default upload-btn'> <i class='fa fa-spinner hidden'> </i> <span> Select an Image </span> </button>");
     myDropzone.destroy();
     options.clickable = selector + ' .upload-btn';
     myDropzone = new Dropzone(selector, options);
