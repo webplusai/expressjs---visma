@@ -15,6 +15,7 @@ router.get('/app', function(req, res) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
 			var data = JSON.parse(chunk);
+			console.log('Response: ' + chunk);
 			var get = https.request(helper.getOptions('/stats/series/month/views?query=' + encodeURIComponent("{developerId: '" + config.DEVELOPER_ID + "'}"), 'GET'), function(response) {
 				response.setEncoding('utf8');
 				response.on('data', function(chunk) {

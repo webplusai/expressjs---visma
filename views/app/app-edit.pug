@@ -184,7 +184,8 @@ script.
 			submitSuccess: function() {
 				var status = '#{app.status.value}';
 				console.log(status);
-				if (status == 'inDevelopment') {
+				if (status != 'pending') {
+				//if (status == 'inDevelopment' || status == 'approved') {
 					if (bSubmit == false) {
 						var modal =
 								'<div id="modal_publish" class="modal fade" role="dialog">' +

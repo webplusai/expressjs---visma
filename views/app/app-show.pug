@@ -30,48 +30,48 @@ section.apps
 		div.container
 			div.card-group
 				div.row
-					each app in data.list
-						div.col-md-6
-							div.card
-								div.card-overlay.text-center
-									div.card-overlay-panel
-										a.btn.btn-see-through(data-toggle="tooltip", title="Edit" href="/app/edit/" + app.appId + "/" + app.version)
-											i.fa.fa-pencil
-										if (app.status.value == 'inDevelopment')
-											a.btn.btn-see-through(data-toggle="tooltip", title="Publish" onclick="showPublishDialog('" + app.appId + "', '" + app.version + "')")
-												i.fa.fa-rocket
-										a.btn.btn-see-through(data-toggle="tooltip", title="Preview" href="http://visma-market.openchannel.io/details/" + app.appId + "/" + app.version, target="_blank")
-											i.fa.fa-search
-										if (app.status.value == 'approved' || app.status.value == 'suspended')
-											a.btn.btn-see-through(data-toggle="tooltip", title="Delete" onclick="showDeleteDialog('" + app.appId + "')")
+					if data.list.length == 0
+						div.no-results-card.
+							You don't have any apps yet.
+					else
+						each app in data.list
+							div.col-md-6
+								div.card
+									div.card-overlay.text-center
+										div.card-overlay-panel
+											a.btn.btn-see-through(data-toggle="tooltip", title="Edit" href="/app/edit/" + app.appId + "/" + app.version)
+												i.fa.fa-pencil
+											if (app.status.value == 'inDevelopment')
+												a.btn.btn-see-through(data-toggle="tooltip", title="Publish" onclick="showPublishDialog('" + app.appId + "', '" + app.version + "')")
+													i.fa.fa-rocket
+											a.btn.btn-see-through(data-toggle="tooltip", title="Preview" href="http://visma-market.openchannel.io/details/" + app.appId + "/" + app.version, target="_blank")
+												i.fa.fa-search
+											a.btn.btn-see-through(data-toggle="tooltip", title="Delete" onclick="showDeleteDialog('" + app.appId + "', '" + app.version + "', '" + app.status.value + "')")
 												i.fa.fa-trash
-										else
-											a.btn.btn-see-through(data-toggle="tooltip", title="Delete" onclick="showDeleteDialog('" + app.appId + "', '" + app.version + "')")
-												i.fa.fa-trash
-								div(class=app.status.value + " card-status text-center")
-									case app.status.value
-										when 'approved'
-											span Approved
-										when 'inDevelopment'
-											span Draft
-										when 'inReview'
-											span Review
-										when 'pending'
-											span Pending Approval
-										when 'suspended'
-											span Suspended
-										when 'rejected'
-											span Rejected
-								div.card-content
-									div.row
-										div.col-md-4
-											div.card-image
-												img(src=app.customData.icon)
-										div.col-md-8
-											div.card-title
-												= app.name
-											div.card-summary
-												= app.customData.summary
+									div(class=app.status.value + " card-status text-center")
+										case app.status.value
+											when 'approved'
+												span Approved
+											when 'inDevelopment'
+												span Draft
+											when 'inReview'
+												span In Review
+											when 'pending'
+												span Pending Approval
+											when 'suspended'
+												span Suspended
+											when 'rejected'
+												span Rejected
+									div.card-content
+										div.row
+											div.col-md-4
+												div.card-image
+													img(src=app.customData.icon)
+											div.col-md-8
+												div.card-title
+													= app.name
+												div.card-summary
+													= app.customData.summary
 
 script.
 
@@ -98,18 +98,45 @@ script.
 		$(modal).modal();
 	}
 
-	function showDeleteDialog(appId, version) {
+	function showDeleteDialog(appId, version, status) {
 		var modal =
 		'<div id="modal_delete" class="modal fade" role="dialog">' +
 		'	<div class="modal-dialog">' + 
 		'		<div class="modal-content">' + 
 		'			<div class="modal-header">' +
-		'				<button class="close" data-dismiss="modal"> &times; </button>' +
-		'				<h4 class="modal-title"> Delete Version? </h4>' +
-		'			</div>' +
-		'			<div class="modal-body">' +
-		'				<p> Are you sure that you want to delete this app? </p>' +
-		'			</div>' +
+		'				<button class="close" data-dismiss="modal"> &times; </button>';
+
+		if (status == 'approved')
+			modal += '	<h4 class="modal-title"> Delete App? </h4>';
+		else
+			modal += '	<h4 class="modal-title"> Delete Version? </h4>';
+
+		modal += '	</div>' +
+		'			<div class="modal-body">';
+
+		if (status == 'approved')
+			modal +='	<p> Are you sure that you want to delete this app? </p>' + 
+					'	<p><strong>Warning:</strong> This will completely delete all versions of this app including drafts and pending versions.</p>';
+		else {
+			var version_string = '';
+			switch (status) {
+				case 'inDevelopment':
+					version_string = 'Draft';
+					break;
+				case 'inReview':
+					version_string = 'In Review';
+					break;
+				case 'pending':
+					version_string = 'Pending Approval';
+					break;
+				case 'rejected':
+					version_string = 'Rejected';
+					break;
+			}
+			modal +='	<p> Are you sure that you want to delete this ' +  version_string + ' version of app? </p>';
+		}
+		
+		modal +=  '	</div>' +
 		'			<div class="modal-footer">' +
 		'				<button class="btn btn-default" data-dismiss="modal"> Cancel </button>' +
 		'				<button class="btn btn-danger" onclick="deleteApp(this, \'' + appId + '\', \'' + version + '\')"> <i class="fa fa-spinner hidden"> </i> Delete </button>' +

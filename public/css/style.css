@@ -107,32 +107,32 @@
 	text-align: center;
 }
 
-.card-status.approved{
+.card-status.approved {
 	background-color: #3c763d;
 	color: #dff0d8;
 }
 
-.card-status.inDevelopment{
+.card-status.inDevelopment {
 	background-color:#737373;
 	color: #efefef;
 }
 
-.card-status.inReview{
+.card-status.inReview {
 	background-color: #31708f;
 	color: #d9edf7;
 }
 
-.card-status.pending{
+.card-status.pending {
 	background-color: #31708f;
 	color: #d9edf7;
 }
 
-.card-status.suspended{
+.card-status.suspended {
 	background-color: #8a6d3b;
 	color: #fff;
 }
 
-.card-status.rejected{
+.card-status.rejected {
 	background-color: #a94442;
 	color: #fff;
 }
@@ -288,6 +288,19 @@ img {
 .nav-menu li a {
 	line-height: 88px;
 	margin: 0px 12px;
+}
+
+.no-results-card {
+	padding: 40px;
+    font-weight: 600;
+    text-align: center;
+    max-width: 300px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
+    box-shadow: 2px 2px 6px #d8d8d8;
+    background-color: #fff;
 }
 
 #plot {
