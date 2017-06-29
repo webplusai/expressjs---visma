@@ -191,11 +191,48 @@ router.post('/app/delete', function(req, res) {
 	var post = https.request(options, function(response) {
 		response.setEncoding('utf8');
 		response.on('data', function(chunk) {
+			var body = JSON.parse(chunk);
+			if (typeof body.code != 'undefined') {
+				req.session.toast_type = 'error';
+				req.session.toast_message = body.errors[0].message;
+				res.send('error');
+				return;
+			}
 			req.session.toast_type = 'delete';
 			res.send('success');
 		});
 	});
 
+	post.end();
+});
+
+router.post('/app/status', function(req, res) {
+	var body = {
+		developerId: config.DEVELOPER_ID,
+		status: req.body.status
+	};
+	console.log(body);
+	var post = https.request(helper.getOptions('/apps/' + req.body.appId + '/status', 'POST'), function(response) {
+		response.setEncoding('utf8');
+		console.log('Request sent');
+		response.on('data', function(chunk) {
+			var body = JSON.parse(chunk);
+			console.log('Response arrived');
+			if (typeof body.code != 'undefined') {
+				console.log('Error');
+				req.session.toast_type = 'error';
+				req.session.toast_message = body.errors[0].message;
+				res.send('error');
+				return;
+			}
+			console.log('success');
+			req.session.toast_type = 'status';
+			req.session.toast_message = 'App ' + req.body.status + 'ed successfully';
+			res.send('success');
+		});
+	});
+
+	post.write(JSON.stringify(body));
 	post.end();
 });
 

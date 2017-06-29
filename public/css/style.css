@@ -216,7 +216,7 @@
 	border-radius: 4px;
 }
 
-#modal_publish .fa-spinner, #modal_delete .fa-spinner, .dropzone .fa-spinner {
+.fa-spinner {
 	animation: spin 2000ms infinite linear;
 }
 

@@ -39,6 +39,8 @@ html
 				
 				if (toast_type == 'error') {
 					toastr.error(toast_message);
+				} else if (toast_type == 'status') {
+					toastr.success(toast_message);
 				} else if (toast_type == 'create') {
 					toastr.success('Your draft has been saved');
 				} else if (toast_type == 'update') {
