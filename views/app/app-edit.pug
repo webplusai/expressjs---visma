@@ -38,21 +38,20 @@ section.form
 				div.col-md-6.controls
 					textarea.form-control(required, data-validation-required-message="Please fill out this field", name="summary")
 						= app.customData.summary
-			div.from-group.row.control-group
+			div.form-group.row.control-group
 				div.col-md-3.item.
 					Description
 					#[span.text-danger *]
-				div.col-md-6
+				div.col-md-6.controls
 					textarea.form-control(required, data-validation-required-message="Please fill out this field", name="description" )#description 
 						= app.customData.description
-					p.help-block
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Icon
 					#[span.text-danger *]
-				div.col-md-6
+				div.col-md-6.controls
 					div#upload-icon.dropzone
-						input#icon(name="icon", type="input", class="hidden", value=app.customData.icon)
+						input#icon(name="icon", type="input", class="hidden", value=app.customData.icon, required, data-validation-required-message="Please upload icon")
 						if app.customData.icon
 							div.dz-preview.dz-processing.dz-image-preview.dz-success.dz-complete
 								div.dz-image
@@ -67,7 +66,7 @@ section.form
 					Images
 				div.col-md-6
 					div#upload-images.dropzone
-						input#images(name="images", type="input", class="hidden")
+						input#images(name="images", type="input", class="hidden" value=app.customData.images)
 						if app.customData.imageList
 							each image in app.customData.imageList
 								div.dz-preview.dz-processing.dz-image-preview.dz-success.dz-complete
@@ -83,7 +82,7 @@ section.form
 					Files
 				div.col-md-6
 					div#upload-files.dropzone
-						input#files(name="files", type="input", class="hidden")
+						input#files(name="files", type="input", class="hidden" value=app.customData.files)
 						if app.customData.fileList
 							each file in app.customData.fileList
 								div.dz-preview.dz-processing.dz-image-preview.dz-success.dz-complete
@@ -100,22 +99,10 @@ section.form
 					#[span.text-danger *]
 				div.col-md-6.controls
 					select.form-control.categorizer(multiple="multiple", required, data-validation-required-message="Please select at least one", name="category" value=app.customData.category)
-						if app.customData.category.indexOf('Autogiro') != -1
-							option(selected="selected") Autogiro
-						else
-							option Autogiro
-						if app.customData.category.indexOf('BokningsSystem') != -1
-							option(selected="selected") BokningsSystem
-						else
-							option BokningsSystem
-						if app.customData.category.indexOf('CRM') != -1
-							option(selected="selected") CRM
-						else
-							option CRM
-						if app.customData.category.indexOf("E-handel") != -1
-							option(selected="selected") E-handel
-						else
-							option E-handel
+						option( selected=app.customData.category.indexOf('Autogiro') != -1 ? 'selected' : false ) Autogiro
+						option( selected=app.customData.category.indexOf('BokningsSystem') != -1 ? 'selected' : false ) BokningsSystem
+						option( selected=app.customData.category.indexOf('CRM') != -1 ? 'selected' : false) CRM
+						option( selected=app.customData.category.indexOf('E-handel') != -1 ? 'selected' : false) E-handel
 
 			div.form-group.row.control-group
 				div.col-md-3.item.
@@ -133,129 +120,14 @@ section.form
 					button.btn.btn-primary.pull-right(type="submit", onclick="bSubmit=false;").
 						Save
 
-script(src="/public/js/cropper-dropzone.js")
 script.
-	Dropzone.autoDiscover = false;
-	tinymce.init(
-		{ 
-			selector:'#description',
-			plugins: "lists link",
-			menubar: false,
-			toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link"
-		}
-	);
-	var bSubmit = false;
 
-	function editApp(obj, publish) {
-		bSubmit=true; 
-		$('#publish').val(publish);
-		$(obj).find('.fa-spinner').removeClass('hidden');
-		$(obj).prop('disabled', true);
-		$('form').submit();
-	}
-
-	function removeFile(obj, selector, file) {
-		$(selector).val($(selector).val().replace(',' + file, ''));
-		$(selector).val($(selector).val().replace(file + ',', ''));
-		$(selector).val($(selector).val().replace(file, ''));
+	<!-- Remove file from dropzone preview area -->
+	function removeFile(obj, selector, fileName) {
+		$(selector).val($(selector).val().replace(',' + fileName, ''));
+		$(selector).val($(selector).val().replace(fileName + ',', ''));
+		$(selector).val($(selector).val().replace(fileName, ''));
 		$(obj).parent().remove();
 	}
 
-	$(document).ready(function() {
-		initializeCropperDropzone("#upload-icon", {
-			fileType: "icon",
-			bCropper: true,
-			maxFiles: 1,
-			autoProcessQueue: false,
-			minWidth: 100,
-			minHeight: 100
-		});
-		initializeCropperDropzone("#upload-images", {
-			fileType: "images",
-			maxFiles: 10,
-			autoProcessQueue: true,
-		});
-		initializeCropperDropzone("#upload-files", {
-			fileType: "files",
-			bFile: true,
-			maxFiles: 10,
-			autoProcessQueue: true,
-		});
-
-		$(".categorizer").select2();
-
-		$("form").find("input,select,textarea").not("[type='submit']").jqBootstrapValidation({ });
-
-		$("form").find("input,select,textarea").not("[type='submit']").jqBootstrapValidation({ 
-			preventSubmit: true,
-			submitSuccess: function() {
-				var status = '#{app.status.value}';
-				console.log(status);
-				if (status != 'pending') {
-					if (bSubmit == false) {
-						var modal =
-							'<div id="modal_publish" class="modal fade" role="dialog">' +
-							'	<div class="modal-dialog">' + 
-							'		<div class="modal-content">' + 
-							'			<div class="modal-header">' +
-							'				<button class="close" data-dismiss="modal"> &times; </button>' +
-							'				<h4 class="modal-title"> Publish App </h4>' +
-							'			</div>' +
-							'			<div class="modal-body">' +
-							'				<p> Do you also want to submit this app to the marketplace right now? </p>' +
-							'			</div>' +
-							'			<div class="modal-footer">' +
-							'				<button class="btn btn-default" onclick="editApp(this, \'false\');"> <i class="fa fa-spinner hidden"> </i> Later </button>' +
-							'				<button class="btn btn-primary" onclick="editApp(this, \'true\');"> <i class="fa fa-spinner hidden"> </i> Yes </button>' +
-							'			</div>' +
-							'		</div>' +
-							'	</div>' +
-							'</div>';
-
-						$(modal).modal();
-						return false;
-					} else {
-						return true;
-					}
-				} else {
-					bSubmit = true;
-				}
-			}
-		});
-
-		$("form").submit(function(e){
-			return bSubmit;
-		});
-
-		var xaxis = [];
-		var month = (new Date()).getMonth();
-		for (i = 0; i < 13; i++) {
-			xaxis.push([ i, monthNames[month++ % 12] ]);
-		}
-
-		var statistics = JSON.parse('#{statistics}');
-		for(i = 0; i < statistics.length; i++) {
-			statistics[i][0] = i;
-		}
-
-		flotConfig.xaxis.ticks = xaxis;
-		var plot = $("#plot").plot(
-			[
-				{ 
-					data: statistics
-				},
-			],
-			flotConfig
-		).data("plot");
-
-		$(".video-url").change(function() {
-			$(".video-preview iframe").remove();
-			$(".video-preview").append(getEmbedVideoCode( $(".video-url").val(), 390, 220 ));
-		});
-
-		if ($(".video-url").val())
-			$(".video-preview").append(getEmbedVideoCode( $(".video-url").val(), 390, 220 ));
-
-	});
-
-include ./../footer.pug
+<!-- include ./../footer.pug -->

@@ -33,22 +33,20 @@ section.form
 					#[span.text-danger *]
 				div.col-md-6.controls
 					textarea.form-control(required, data-validation-required-message="Please fill out this field", name="summary")
-			div.from-group.row.control-group
+			div.form-group.row.control-group
 				div.col-md-3.item.
 					Description
 					#[span.text-danger *]
-				div.col-md-6
+				div.col-md-6.controls
 					textarea.form-control(required, data-validation-required-message="Please fill out this field", name="description")#description
-					p.help-block
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Icon
 					#[span.text-danger *]
 				div.col-md-6
 					div#upload-icon.dropzone
-				div.col-md-6.col-md-offset-3
+				div.col-md-6.col-md-offset-3.controls
 					input#icon(name="icon", type="input", class="hidden", value="", required, data-validation-required-message="Please upload icon")
-					p.help-block
 			div.form-group.row.control-group
 				div.col-md-3.item.
 					Images
@@ -95,90 +93,4 @@ section.form
 					button.btn.btn-primary.pull-right(type="submit", onclick="bSubmit=false;").
 						Save Draft
 
-script(src="/public/js/cropper-dropzone.js")
-script.
-	Dropzone.autoDiscover = false;
-	tinymce.init(
-		{ 
-			selector:'#description',
-			plugins: "lists link",
-			menubar: false,
-			toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link"
-		}
-	);
-	var bSubmit = false;
-
-	function createApp(obj, publish) {
-		bSubmit=true; 
-		$('#publish').val(publish);
-		$(obj).find('.fa-spinner').removeClass('hidden');
-		$(obj).prop('disabled', true);
-		$('form').submit();
-	}
-
-	$(document).ready(function() {
-		initializeCropperDropzone("#upload-icon", {
-			fileType: "icon",
-			bCropper: true,
-			maxFiles: 1,
-			autoProcessQueue: false,
-			minWidth: 100,
-			minHeight: 100
-		});
-		initializeCropperDropzone("#upload-images", {
-			fileType: "images",
-			maxFiles: 10,
-			autoProcessQueue: true,
-		});
-		initializeCropperDropzone("#upload-files", {
-			fileType: "files",
-			bFile: true,
-			maxFiles: 10,
-			autoProcessQueue: true,
-		});
-
-		$(".categorizer").select2();
-
-		$("form").find("input,select,textarea").not("[type='submit']").jqBootstrapValidation({ 
-			preventSubmit: true,
-			submitSuccess: function() {
-				if (bSubmit == false) {
-					var modal =
-							'<div id="modal_publish" class="modal fade" role="dialog">' +
-							'	<div class="modal-dialog">' + 
-							'		<div class="modal-content">' + 
-							'			<div class="modal-header">' +
-							'				<button class="close" data-dismiss="modal"> &times; </button>' +
-							'				<h4 class="modal-title"> Publish App </h4>' +
-							'			</div>' +
-							'			<div class="modal-body">' +
-							'				<p> Do you also want to submit this app to the marketplace right now? </p>' +
-							'			</div>' +
-							'			<div class="modal-footer">' +
-							'				<button class="btn btn-default" onclick="createApp(this, \'false\');"> <i class="fa fa-spinner hidden"> </i> Later </button>' +
-							'				<button class="btn btn-primary" onclick="createApp(this, \'true\');"> <i class="fa fa-spinner hidden"> </i> Yes </button>' +
-							'			</div>' +
-							'		</div>' +
-							'	</div>' +
-							'</div>';
-
-					$(modal).modal();
-					return false;
-				} else {
-					return true;
-				}
-			}
-		});
-
-		$("form").submit(function(e){
-			return bSubmit;
-		});
-
-		$(".video-url").change(function() {
-			$(".video-preview iframe").remove();
-			$(".video-preview").append(getEmbedVideoCode( $(".video-url").val(), 390, 220 ));
-		});
-
-	});
-
-include ./../footer.pug
+<!-- include ./../footer.pug -->

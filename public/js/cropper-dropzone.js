@@ -1,4 +1,5 @@
-// transform cropper dataURI output to a Blob which Dropzone accepts
+
+// Transform cropper dataURI output to a Blob which Dropzone accepts
 var dataURItoBlob = function (dataURI) {
     var byteString = atob(dataURI.split(',')[1]);
     var ab = new ArrayBuffer(byteString.length);
@@ -9,7 +10,13 @@ var dataURItoBlob = function (dataURI) {
     return new Blob([ab], {type: 'image/jpeg'});
 };
 
+// Initialize dropzone element
 function initializeCropperDropzone( selector, config ) {
+
+    // In case we haven't dropzone object in the page (Apps page)
+    if ( !$(selector).length ) return;
+    
+    // Flag to determine to show cropper or not.
     var showCropper = true;
 
     var options = {
@@ -22,8 +29,11 @@ function initializeCropperDropzone( selector, config ) {
         minHeight: config.minHeight,
         init: function () {
             $(selector).append($(selector + ' .dz-preview').detach());
+
+            // When file upload is completed
             this.on('success', function (file, response) {
 
+                // Hide spinner, enable the upload button and make the text from "Uploading" to original text ("Select a File" or "Select an Image").
                 $(selector + " .upload-btn .fa-spinner").addClass("hidden");
                 if (config.bFile)
                     $(selector + " .upload-btn span").text("Select a File");
@@ -31,32 +41,35 @@ function initializeCropperDropzone( selector, config ) {
                     $(selector + " .upload-btn span").text("Select an Image");
                 $(selector + " .upload-btn").prop("disabled", false);
 
+                // Add crop & upload button
                 var $button = $('<a href="#" class="js-open-cropper-modal hidden" data-file-name="' + response + '">Crop & Upload</a>');
+                $(file.previewElement).append($button);
+
+                // Add & remove file name of the dropzone
                 setTimeout(function() {
                     if ( config.fileType == "icon") {
+                        // If the dropzone is icon upload dropzone.
                         $("#" + config.fileType).val(response);
-                        console.log($("#" + config.fileType).val());
                         $(selector + ' .dz-remove:last').click(function() {
                             $("#" + config.fileType).val('');
-                            console.log($("#" + config.fileType).val());
                         });
                     } else {
+                        // If the dropzone is image or file upload dropzone
                         if ( $("#" + config.fileType).val() == "" ) {
                             $("#" + config.fileType).val($("#" + config.fileType).val() + response);
                         } else {
                             $("#" + config.fileType).val($("#" + config.fileType).val() + "," + response);
                         }
-                        console.log($("#" + config.fileType).val());
+
                         $(selector + ' .dz-remove:last').click(function() {
                             $("#" + config.fileType).val($("#" + config.fileType).val().replace(',' + response, ''));
                             $("#" + config.fileType).val($("#" + config.fileType).val().replace(response + ',', ''));
                             $("#" + config.fileType).val($("#" + config.fileType).val().replace(response, ''));
-                            console.log($("#" + config.fileType).val());
                         });
                     }
                 }, 0);
                 
-                $(file.previewElement).append($button);
+                // Show cropper dialog
                 if (showCropper == true && config.bCropper == true) {
                     $button.trigger('click');
                     this.removeFile(file);
@@ -64,22 +77,21 @@ function initializeCropperDropzone( selector, config ) {
                     showCropper = false;
                 }
 
+                // Mark the progress bar text as completed.
                 $(selector + " .dz-upload:last").text("Complete");
                 $(selector + " .dz-upload:last").addClass("completed");
             });
 
-            this.on('drop', function (event) {
-                
-            });
-
             this.on('addedfile', function(file) {
 
+                // Disable upload button, show spinner and make the text to "Uploading"
                 if ( config.fileType != "icon" || showCropper != true ) {
                     $(selector + " .upload-btn .fa-spinner").removeClass("hidden");
                     $(selector + " .upload-btn span").text("Uploading");
                     $(selector + " .upload-btn").prop("disabled", true);
                 }
 
+                // Show cropper modal if the dropzone is icon dropzone
                 if ( config.fileType == "icon" ) {
                     var reader = new FileReader();
                     reader.readAsDataURL(file);
@@ -89,8 +101,7 @@ function initializeCropperDropzone( selector, config ) {
                         image.src = e.target.result;
                         image.onload = function() {
 
-                            console.log(config);
-
+                            // Display error message if the image size if smaller than the minimum size
                             if ( this.width < config.minWidth || this.height < config.minHeight ) {
                                 myDropzone.removeFile(file);
                                 var modalTemplate =
@@ -112,7 +123,7 @@ function initializeCropperDropzone( selector, config ) {
                                     '</div>';
                                 $(modalTemplate).modal();
                             } else {
-                                console.log("I am triggered");
+                            // If not, display cropper modal
                                 var $button = $('<a href="#" class="js-open-cropper-modal hidden" data-file-name="' + e.target.result + '">Crop & Upload</a>');
                                 $(file.previewElement).append($button);
 
@@ -128,12 +139,14 @@ function initializeCropperDropzone( selector, config ) {
                     };
                 }
 
+                // Set file icon if the dropzone is a file upload dropzone.
                 if ( config.bFile ) {
                     $(selector + " .dz-image *").remove();
                     $(selector + " .dz-preview .dz-image").append("<i class='fa fa-file'> </i>");
                 }
             });
 
+            // If max file count is exceeded, replace the exisiting one.
             this.on('maxfilesexceeded', function(file) {
                 var files = this.files;
 
@@ -145,6 +158,7 @@ function initializeCropperDropzone( selector, config ) {
                 }
             });
 
+            // Display upload progress text.
             this.on('uploadprogress', function(file, progress) {
                 if ( progress == 100 )
                     $(selector + ' .dz-upload:last').text('99%');
@@ -156,10 +170,12 @@ function initializeCropperDropzone( selector, config ) {
 
     var myDropzone = new Dropzone(selector, options);
 
+    // Append upload button in the dropzone.
     if (config.bFile) 
         $(selector + ' .dz-default').prepend("<button type='button' class='btn btn-default upload-btn'> <i class='fa fa-spinner hidden'> </i> <span> Select a File </span> </button>");
     else
         $(selector + ' .dz-default').prepend("<button type='button' class='btn btn-default upload-btn'> <i class='fa fa-spinner hidden'> </i> <span> Select an Image </span> </button>");
+
     myDropzone.destroy();
     options.clickable = selector + ' .upload-btn';
     myDropzone = new Dropzone(selector, options);
@@ -210,7 +226,8 @@ function initializeCropperDropzone( selector, config ) {
             var $this = $(this);
             $this
                 .on('click', '.crop-upload', function () {
-                    if( $(".cropper-crop-box").width() < 100 ) {
+                    // Display error message if the crooped area is smaller than min size
+                    if( $(".cropper-crop-box").width() < config.minWidth || $(".cropper-crop-box").height() < config.minHeight ) {
                         var modalTemplate =
                             '<div class="modal fade" tabindex="-1" role="dialog">' +
                             '   <div class="modal-dialog modal-md" role="document">' +
