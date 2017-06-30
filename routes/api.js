@@ -224,7 +224,7 @@ router.post('/app/delete', function(req, res) {
 	var options;
 
 	// If version is set, delete that version
-	if ( req.body.version != 'undefined' ) {
+	if ( typeof req.body.version != 'undefined' ) {
 		options = helper.getOptions('/apps/' + req.body.appId + '/versions/' + req.body.version + '?developerId=' + config.DEVELOPER_ID, 'DELETE');
 	} 
 	// If version is not set, delete all app versions

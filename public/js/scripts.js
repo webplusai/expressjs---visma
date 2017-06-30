@@ -33,9 +33,6 @@ function submitApp(obj, publish) {
 
 $(document).ready(function() {
 
-	var toast_type = '#{toast_type}';
-	var toast_message = '#{toast_message}';
-
 	// Set toast message to be appeared on the top center position
 	toastr.options = {
 		'positionClass': 'toast-top-center'
