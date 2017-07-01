@@ -19,6 +19,10 @@ section.breadcrumb
 
 section.form
 	div.container
+		h1
+			i.fa.fa-search
+			span.
+				 #{views} Views
 		div#plot
 		form.form(method="post", action="/api/app/update" novalidate)
 			input.hidden(name="method", value="put")

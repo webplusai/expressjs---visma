@@ -24,18 +24,25 @@ router.get('/app', function(req, res) {
 			// 		i --;
 			// 	}
 			// }
-			
-			// Get statistics after retreiving app versions
+			// 
+
+			//Get statistics after retreiving app versions
 			var get = https.request(helper.getOptions('/stats/series/month/views?query=' + encodeURIComponent("{developerId: '" + config.DEVELOPER_ID + "'}"), 'GET'), function(response) {
 				response.setEncoding('utf8');
 				response.on('data', function(chunk) {
 
-					// Set toast type and toast message.
+					var views = 0;					
+					var statistics = JSON.parse(chunk);
 					var toast_type = req.session.toast_type;
 					var toast_message = req.session.toast_message;
+
+					for (i = 0; i < statistics.length; i++) {
+						views += statistics[i][1];
+					}
+
 					req.session.toast_type = '';
 					req.session.toast_message = '';
-					res.render('app/app-show', {data: data, statistics: chunk, toast_type: toast_type, toast_message: toast_message });
+					res.render('app/app-show', {data: data, statistics: chunk, toast_type: toast_type, toast_message: toast_message, views: views });
 				})
 			});
 
@@ -72,11 +79,19 @@ router.get('/app/edit/:id/:version', function(req, res) {
 			var get = https.request(helper.getOptions("/stats/series/month/views?query=" + encodeURIComponent("{appId: '" + app.appId + "', developerId: '" + config.DEVELOPER_ID + "'}"), 'GET'), function(response) {
 				response.setEncoding('utf8');
 				response.on('data', function(chunk) {
+
+					var views = 0;					
+					var statistics = JSON.parse(chunk);
 					var toast_type = req.session.toast_type;
 					var toast_message = req.session.toast_message;
+
+					for (i = 0; i < statistics.length; i++) {
+						views += statistics[i][1];
+					}
+
 					req.session.toast_type = '';
 					req.session.toast_message = '';
-					res.render('app/app-edit', {app: app, statistics: chunk, toast_type: toast_type, toast_message: toast_message});
+					res.render('app/app-edit', {app: app, statistics: chunk, toast_type: toast_type, toast_message: toast_message, views: views});
 				});
 			});
 
